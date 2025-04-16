@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로또 번호 추천 사이트</title>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #0066cc;
+            margin-bottom: 10px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+        
+        .tab-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            transition: 0.3s;
+            border-radius: 5px 5px 0 0;
+            margin: 0 3px 5px 3px;
+            /* 비활성화된 탭의 색상 대비 개선 */
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .tab:hover {
+            background-color: #ddd;
+        }
+        
+        .tab.active {
+            background-color: #0066cc;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 15px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select {
+            width: 80%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            text-align: center;
+            margin: 0 auto;
+        }
+        
+        button {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin: 10px auto;
+        }
+        
+        button:hover {
+            background-color: #0052a3;
+        }
+        
+        .numbers-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .number-set {
+            margin: 10px;
+            text-align: center;
+        }
+        
+        .lotto-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 2px solid #ddd;
+            margin: 5px;
+            line-height: 40px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .bonus-number {
+            position: relative;
+        }
+        
+        .bonus-number::after {
+            content: "+";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            font-size: 20px;
+            color: #FF5722;
+            font-weight: bold;
+        }
+        
+        .number-1-10 { background-color: #ffc107; }
+        .number-11-20 { background-color: #4caf50; }
+        .number-21-30 { background-color: #f44336; }
+        .number-31-40 { background-color: #2196f3; }
+        .number-41-45 { background-color: #9c27b0; }
+        
+        .history {
+            margin: 20px auto;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            max-width: 90%;
+        }
+        
+        .history h3 {
+            margin-top: 0;
+        }
+        
+        .stats-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .hot-numbers, .cold-numbers {
+            margin: 10px 0;
+        }
+        
+        .draw-info {
+            margin: 20px auto;
+            padding: 15px;
+            background-color: #f0f7ff;
+            border-radius: 8px;
+            border-left: 5px solid #0066cc;
+            max-width: 90%;
+        }
+        
+        .draw-date {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .draw-numbers {
+            margin: 15px 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .search-container {
+            margin-top: 20px;
+        }
+        
+        .prize-info {
+            margin: 20px auto;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 8px;
+            border-left: 5px solid #4caf50;
+            max-width: 90%;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        th, td {
+            padding: 8px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            gap: 5px;
+            margin: 15px auto;
+            max-width: 90%;
+        }
+        
+        .stats-cell {
+            position: relative;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            font-size: 12px;
+            border-radius: 5px;
+            background-color: #f1f1f1;
+        }
+        
+        .stats-cell-hot {
+            background-color: #ffcdd2;
+        }
+        
+        .stats-cell-warm {
+            background-color: #fff9c4;
+        }
+        
+        .stats-cell-cold {
+            background-color: #bbdefb;
+        }
+        
+        .frequency {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            font-size: 10px;
+            background-color: #0066cc;
+            color: white;
+            width: 18px;
+            height: 18px;
+            line-height: 18px;
+            border-radius: 50%;
+        }
+        
+        .recommendation-box {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px auto;
+            border: 2px dashed #4caf50;
+            max-width: 90%;
+        }
+        
+        .recommendation-title {
+            color: #2e7d32;
+            margin-top: 0;
+        }
+        
+        .recommendation-desc {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>행운의 로또 번호 추천</h1>
+        <p>행운이 당신을 찾아갑니다!</p>
+    </header>
+    
+    <div class="container">
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab(event, 'random')">랜덤 번호</button>
+            <button class="tab" onclick="openTab(event, 'custom')">맞춤형 번호</button>
+            <button class="tab" onclick="openTab(event, 'stats')">통계 분석</button>
+            <button class="tab" onclick="openTab(event, 'results')">당첨 번호</button>
+        </div>
+        
+        <div id="random" class="tab-content active">
+            <div class="form-group">
+                <label for="sets">생성할 번호 세트 수:</label>
+                <select id="sets">
+                    <option value="1">1세트</option>
+                    <option value="3">3세트</option>
+                    <option value="5">5세트</option>
+                    <option value="10">10세트</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="recommendation-type">추천 방식:</label>
+                <select id="recommendation-type">
+                    <option value="pure-random">완전 랜덤</option>
+                    <option value="statistical">통계 기반 추천</option>
+                </select>
+            </div>
+            
+            <button onclick="generateRecommendedNumbers()">번호 추천받기</button>
+            
+            <div class="recommendation-box" id="stats-recommendation-box" style="display: none;">
+                <h4 class="recommendation-title">전체 회차 분석 결과</h4>
+                <p class="recommendation-desc">지금까지의 모든 추첨 결과를 분석하여 가장 많이 나온 번호들을 기반으로 추천합니다.</p>
+                <div class="stats-info">
+                    <div class="hot-numbers">
+                        <strong>자주 나오는 번호 (Top 10):</strong>
+                        <div class="lotto-number number-1-10">7</div>
+                        <div class="lotto-number number-11-20">12</div>
+                        <div class="lotto-number number-21-30">25</div>
+                        <div class="lotto-number number-31-40">34</div>
+                        <div class="lotto-number number-41-45">43</div>
+                        <div class="lotto-number number-1-10">3</div>
+                        <div class="lotto-number number-11-20">17</div>
+                        <div class="lotto-number number-21-30">23</div>
+                        <div class="lotto-number number-31-40">33</div>
+                        <div class="lotto-number number-21-30">27</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="random-numbers" class="numbers-container"></div>
+        </div>
+        
+        <div id="custom" class="tab-content">
+            <div class="form-group">
+                <label for="birthday">생년월일:</label>
+                <input type="date" id="birthday">
+            </div>
+            
+            <div class="form-group">
+                <label for="lucky-number">행운의 숫자 (1-45):</label>
+                <input type="number" id="lucky-number" min="1" max="45">
+            </div>
+            
+            <div class="form-group">
+                <label for="exclude-numbers">제외할 숫자 (쉼표로 구분):</label>
+                <input type="text" id="exclude-numbers" placeholder="예: 13,26,33">
+            </div>
+            
+            <button onclick="generateCustomNumbers()">맞춤 번호 생성하기</button>
+            
+            <div id="custom-numbers" class="numbers-container"></div>
+        </div>
+        
+        <div id="stats" class="tab-content">
+            <h3>로또 번호 통계 분석</h3>
+            
+            <div class="history">
+                <h4>번호별 출현 빈도 (전체 회차)</h4>
+                <div class="stats-grid" id="number-stats-grid">
+                    <!-- 번호별 통계가 여기에 동적으로 생성됨 -->
+                </div>
+            </div>
+            
+            <div class="history">
+                <h3>자주 나오는 번호 TOP 5</h3>
+                <div class="lotto-number number-1-10">7</div>
+                <div class="lotto-number number-11-20">12</div>
+                <div class="lotto-number number-21-30">25</div>
+                <div class="lotto-number number-31-40">34</div>
+                <div class="lotto-number number-41-45">43</div>
+            </div>
+            
+            <div class="history">
+                <h3>적게 나오는 번호 TOP 5</h3>
+                <div class="lotto-number number-11-20">15</div>
+                <div class="lotto-number number-21-30">22</div>
+                <div class="lotto-number number-31-40">36</div>
+                <div class="lotto-number number-1-10">8</div>
+                <div class="lotto-number number-41-45">44</div>
+            </div>
+            
+            <button onclick="generateStatisticalNumbers()">통계 기반 번호 추천받기</button>
+            <div id="statistical-numbers" class="numbers-container"></div>
+        </div>
+        
+        <div id="results" class="tab-content">
+            <h3>최근 당첨 번호 확인</h3>
+            
+            <div class="draw-info">
+                <h4>1065회 당첨 번호 (2025년 4월 8일 추첨)</h4>
+                <div class="draw-date">추첨일: 2025년 4월 8일 (화)</div>
+                
+                <div class="draw-numbers">
+                    <div class="lotto-number number-1-10">3</div>
+                    <div class="lotto-number number-11-20">12</div>
+                    <div class="lotto-number number-21-30">24</div>
+                    <div class="lotto-number number-31-40">35</div>
+                    <div class="lotto-number number-41-45">41</div>
+                    <div class="lotto-number number-21-30">27</div>
+                    <div class="lotto-number number-31-40">38</div>
+                    <span class="bonus-number"></span>
+                </div>
+                
+                <div class="prize-info">
+                    <h4>당첨금 정보</h4>
+                    <table>
+                        <tr>
+                            <th>순위</th>
+                            <th>당첨 방법</th>
+                            <th>당첨금</th>
+                            <th>당첨자 수</th>
+                        </tr>
+                        <tr>
+                            <td>1등</td>
+                            <td>6개 번호 일치</td>
+                            <td>2,563,421,860원</td>
+                            <td>12명</td>
+                        </tr>
+                        <tr>
+                            <td>2등</td>
+                            <td>5개 번호 + 보너스 번호 일치</td>
+                            <td>58,259,587원</td>
+                            <td>53명</td>
+                        </tr>
+                        <tr>
+                            <td>3등</td>
+                            <td>5개 번호 일치</td>
+                            <td>1,462,845원</td>
+                            <td>2,113명</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="search-container">
+                <h4>회차별 당첨번호 검색</h4>
+                <div class="form-group">
+                    <label for="draw-number">회차 번호:</label>
+                    <input type="number" id="draw-number" min="1" max="1065" placeholder="1 ~ 1065">
+                </div>
+                <button onclick="searchDrawResults()">검색</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 번호별 출현 빈도 데이터 (가상 데이터)
+        const numberFrequency = {
+            1: 125, 2: 137, 3: 154, 4: 129, 5: 143, 6: 138, 7: 167, 8: 116, 9: 142, 
+            10: 132, 11: 144, 12: 159, 13: 135, 14: 139, 15: 118, 16: 128, 17: 148, 
+            18: 138, 19: 127, 20: 139, 21: 134, 22: 119, 23: 146, 24: 138, 25: 153, 
+            26: 130, 27: 147, 28: 139, 29: 133, 30: 136, 31: 142, 32: 145, 33: 149, 
+            34: 156, 35: 139, 36: 122, 37: 131, 38: 145, 39: 138, 40: 142, 41: 149, 
+            42: 136, 43: 152, 44: 124, 45: 131
+        };
+        
+        // 가장 높은 빈도와 가장 낮은 빈도 찾기
+        let maxFreq = 0;
+        let minFreq = Infinity;
+        
+        for (const num in numberFrequency) {
+            if (numberFrequency[num] > maxFreq) maxFreq = numberFrequency[num];
+            if (numberFrequency[num] < minFreq) minFreq = numberFrequency[num];
+        }
+        
+        function openTab(evt, tabName) {
+            const tabcontent = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            const tablinks = document.getElementsByClassName("tab");
+            for (let i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+            
+            // 현재 탭에 따른 특별한 초기화
+            if (tabName === "stats") {
+                generateNumberStats();
+            }
+        }
+        
+        function generateRecommendedNumbers() {
+            const recommendationType = document.getElementById("recommendation-type").value;
+            const setCount = parseInt(document.getElementById("sets").value);
+            const numbersContainer = document.getElementById("random-numbers");
+            const statsRecommendationBox = document.getElementById("stats-recommendation-box");
+            
+            numbersContainer.innerHTML = "";
+            
+            // 통계 박스 표시 여부 결정
+            if (recommendationType === 'statistical') {
+                statsRecommendationBox.style.display = "block";
+            } else {
+                statsRecommendationBox.style.display = "none";
+            }
+            
+            for (let i = 0; i < setCount; i++) {
+                let numbers;
+                if (recommendationType === 'statistical') {
+                    numbers = generateStatisticalBasedNumbers();
+                } else {
+                    numbers = generateLottoNumbers();
+                }
+                displayNumbers(numbers, numbersContainer, i + 1);
+            }
+        }
+        
+        function generateStatisticalBasedNumbers() {
+            // 빈도 기반으로 번호에 가중치 부여
+            const weightedNumbers = [];
+            const hotNumbers = getHotNumbers(10); // 가장 자주 나오는 10개 번호
+            
+            // 일정 확률로 자주 나오는 번호 포함
+            let initialNumbers = [];
+            
+            // 50% 확률로 핫 넘버 중 1~3개를 선택
+            if (Math.random() > 0.5) {
+                const hotCount = Math.floor(Math.random() * 3) + 1; // 1~3개
+                const shuffledHot = [...hotNumbers].sort(() => Math.random() - 0.5);
+                initialNumbers = shuffledHot.slice(0, hotCount);
+            }
+            
+            // 나머지 번호는 빈도에 비례한 확률로 선택
+            return generateLottoNumbers(initialNumbers, [], true);
+        }
+        
+        function getHotNumbers(count) {
+            // 빈도 기준으로 번호 정렬
+            const sortedNumbers = Object.keys(numberFrequency).sort((a, b) => 
+                numberFrequency[b] - numberFrequency[a]
+            );
+            
+            // 상위 count개 번호 반환
+            return sortedNumbers.slice(0, count).map(num => parseInt(num));
+        }
+        
+        function generateCustomNumbers() {
+            const birthday = document.getElementById("birthday").value;
+            const luckyNumber = parseInt(document.getElementById("lucky-number").value) || 0;
+            const excludeInput = document.getElementById("exclude-numbers").value;
+            const excludeNumbers = excludeInput ? excludeInput.split(',').map(num => parseInt(num.trim())) : [];
+            
+            const numbersContainer = document.getElementById("custom-numbers");
+            numbersContainer.innerHTML = "";
+            
+            // 생일에서 숫자 추출
+            let birthdayNumbers = [];
+            if (birthday) {
+                const date = new Date(birthday);
+                birthdayNumbers.push(date.getDate());
+                birthdayNumbers.push(date.getMonth() + 1);
+                birthdayNumbers.push(date.getFullYear() % 100);
+                // 생년월일 숫자 중 1-45 범위 내의 숫자만 사용
+                birthdayNumbers = birthdayNumbers.filter(num => num >= 1 && num <= 45);
+            }
+            
+            // 행운의 숫자가 유효한 경우 추가
+            const initialNumbers = [];
+            if (luckyNumber >= 1 && luckyNumber <= 45) {
+                initialNumbers.push(luckyNumber);
+            }
+            
+            // 생일 숫자 추가 (겹치지 않게)
+            birthdayNumbers.forEach(num => {
+                if (!initialNumbers.includes(num) && !excludeNumbers.includes(num)) {
+                    initialNumbers.push(num);
+                }
+            });
+            
+            // 나머지 번호 채우기
+            const customNumbers = generateLottoNumbers(initialNumbers, excludeNumbers);
+            displayNumbers(customNumbers, numbersContainer);
+        }
+        
+        function generateStatisticalNumbers() {
+            const numbersContainer = document.getElementById("statistical-numbers");
+            numbersContainer.innerHTML = "";
+            
+            const statsBasedNumbers = generateStatisticalBasedNumbers();
+            displayNumbers(statsBasedNumbers, numbersContainer);
+        }
+        
+        function generateLottoNumbers(initialNumbers = [], excludeNumbers = [], useWeights = false) {
+            let numbers = [...initialNumbers];
+            
+            // 1부터 45까지의 숫자 중 이미 선택된 숫자와 제외할 숫자를 제외한 배열 생성
+            let availableNumbers = [];
+            
+            if (useWeights) {
+                // 빈도 기반 가중치를 사용하는 경우
+                for (let i = 1; i <= 45; i++) {
+                    if (!numbers.includes(i) && !excludeNumbers.includes(i)) {
+                        // 빈도수만큼 번호를 추가 (가중치 부여)
+                        const weight = numberFrequency[i] || 1;
+                        for (let j = 0; j < weight; j++) {
+                            availableNumbers.push(i);
+                        }
+                    }
+                }
+            } else {
+                // 단순 랜덤 선택의 경우
+                for (let i = 1; i <= 45; i++) {
+                    if (!numbers.includes(i) && !excludeNumbers.includes(i)) {
+                        availableNumbers.push(i);
+                    }
+                }
+            }
+            
+            // 랜덤으로 섞기
+            availableNumbers.sort(() => Math.random() - 0.5);
+            
+            // 필요한 만큼의 숫자 가져오기
+            while (numbers.length < 6 && availableNumbers.length > 0) {
+                const idx = Math.floor(Math.random() * availableNumbers.length);
+                const num = availableNumbers[idx];
+                
+                if (!numbers.includes(num)) {
+                    numbers.push(num);
+                }
+                
+                availableNumbers.splice(idx, 1);
+            }
+            
+            // 오름차순 정렬
+            return numbers.sort((a, b) => a - b);
+        }
+        
+        function displayNumbers(numbers, container, setNumber = null) {
+            const numberSetDiv = document.createElement("div");
+            numberSetDiv.className = "number-set";
+            
+            if (setNumber !== null) {
+                const setLabel = document.createElement("div");
+                setLabel.textContent = `세트 ${setNumber}`;
+                numberSetDiv.appendChild(setLabel);
+            }
+            
+            numbers.forEach(num => {
+                const numberDiv = document.createElement("div");
+                numberDiv.className = "lotto-number";
+                
+                // 번호 범위에 따라 클래스 추가
+                if (num >= 1 && num <= 10) {
+                    numberDiv.classList.add("number-1-10");
+                } else if (num >= 11 && num <= 20) {
+                    numberDiv.classList.add("number-11-20");
+                } else if (num >= 21 && num <= 30) {
+                    numberDiv.classList.add("number-21-30");
+                } else if (num >= 31 && num <= 40) {
+                    numberDiv.classList.add("number-31-40");
+                } else {
+                    numberDiv.classList.add("number-41-45");
+                }
+                
+                numberDiv.textContent = num;
+                numberSetDiv.appendChild(numberDiv);
+            });
+            
+            container.appendChild(numberSetDiv);
+        }
+        
+        function generateNumberStats() {
+            const statsGrid = document.getElementById("number-stats-grid");
+            statsGrid.innerHTML = "";
+            
+            for (let i = 1; i <= 45; i++) {
+                const freq = numberFrequency[i] || 0;
+                const cell = document.createElement("div");
+                cell.className = "stats-cell";
+                
+                // 빈도에 따라 색상 클래스 추가
+                const range = maxFreq - minFreq;
+                const threshold1 = minFreq + (range * 0.33);
+                const threshold2 = minFreq + (range * 0.66);
+                
+                if (freq >= threshold2) {
+                    cell.classList.add("stats-cell-hot");
+                } else if (freq >= threshold1) {
+                    cell.classList.add("stats-cell-warm");
+                } else {
+                    cell.classList.add("stats-cell-cold");
+                }
+                
+                cell.textContent = i;
+                
+                const freqSpan = document.createElement("span");
+                freqSpan.className = "frequency";
+                freqSpan.textContent = freq;
+                cell.appendChild(freqSpan);
+                
+                statsGrid.appendChild(cell);
+            }
+        }
+        
+        function searchDrawResults() {
+            const drawNumber = document.getElementById("draw-number").value;
+            alert(`${drawNumber}회 당첨 번호 검색 기능은 현재 개발 중입니다.`);
+        }
+    </script>
+</body>
+</html>
