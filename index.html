@@ -9,7 +9,6 @@
     <script>
         // 카카오 SDK 초기화
         Kakao.init('7bbaa2166711a20e94677d8ed098b216');
-        Kakao.isInitialized();
     </script>
     <style>
         body {
@@ -1107,15 +1106,29 @@
                 shareText += "\n🍀 행운을 빕니다! 🍀";
 
                 // 카카오톡 공유
-                Kakao.Share.sendDefault({
-                    objectType: 'text',
-                    text: shareText,
+                Kakao.Share.sendCustom({
+                    templateId: 100000,
+                    templateArgs: {
+                        title: '로또 번호 추천',
+                        description: shareText
+                    },
                     success: function(response) {
                         console.log('카카오톡 공유 성공:', response);
                     },
                     fail: function(error) {
                         console.error('카카오톡 공유 실패:', error);
-                        alert('카카오톡 공유에 실패했습니다. 다시 시도해주세요.');
+                        // 기본 텍스트 공유로 폴백
+                        Kakao.Share.sendDefault({
+                            objectType: 'text',
+                            text: shareText,
+                            success: function(response) {
+                                console.log('카카오톡 공유 성공:', response);
+                            },
+                            fail: function(error) {
+                                console.error('카카오톡 공유 실패:', error);
+                                alert('카카오톡 공유에 실패했습니다. 다시 시도해주세요.');
+                            }
+                        });
                     }
                 });
             } catch (error) {
