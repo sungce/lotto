@@ -721,19 +721,39 @@
             table.appendChild(tbody);
             numbersContainer.appendChild(table);
 
+            // 버튼 컨테이너 생성
+            const buttonContainer = document.createElement("div");
+            buttonContainer.style.display = "flex";
+            buttonContainer.style.justifyContent = "center";
+            buttonContainer.style.gap = "10px";
+            buttonContainer.style.marginTop = "20px";
+
+            // 저장 버튼 추가
+            const saveButton = document.createElement("button");
+            saveButton.textContent = "번호 저장하기";
+            saveButton.onclick = () => {
+                localStorage.setItem('savedLottoNumbers', JSON.stringify(savedNumbers));
+                alert('번호가 저장되었습니다!');
+            };
+
             // 공유 버튼 추가
             const shareButton = document.createElement("button");
             shareButton.textContent = "카카오톡으로 공유하기";
-            shareButton.style.marginTop = "20px";
             shareButton.onclick = () => shareToKakao(savedNumbers);
-            numbersContainer.appendChild(shareButton);
+
+            buttonContainer.appendChild(saveButton);
+            buttonContainer.appendChild(shareButton);
+            numbersContainer.appendChild(buttonContainer);
         }
 
         // 페이지 로드 시 저장된 번호 복원
         document.addEventListener('DOMContentLoaded', () => {
-            if (savedNumbers.length > 0) {
+            const savedNumbersStr = localStorage.getItem('savedLottoNumbers');
+            if (savedNumbersStr) {
+                savedNumbers = JSON.parse(savedNumbersStr);
                 displaySavedNumbers();
             }
+            toggleStatsRecommendationBox();
         });
 
         function displaySavedNumbers() {
@@ -789,11 +809,29 @@
             table.appendChild(tbody);
             numbersContainer.appendChild(table);
 
+            // 버튼 컨테이너 생성
+            const buttonContainer = document.createElement("div");
+            buttonContainer.style.display = "flex";
+            buttonContainer.style.justifyContent = "center";
+            buttonContainer.style.gap = "10px";
+            buttonContainer.style.marginTop = "20px";
+
+            // 저장 버튼 추가
+            const saveButton = document.createElement("button");
+            saveButton.textContent = "번호 저장하기";
+            saveButton.onclick = () => {
+                localStorage.setItem('savedLottoNumbers', JSON.stringify(savedNumbers));
+                alert('번호가 저장되었습니다!');
+            };
+
+            // 공유 버튼 추가
             const shareButton = document.createElement("button");
             shareButton.textContent = "카카오톡으로 공유하기";
-            shareButton.style.marginTop = "20px";
             shareButton.onclick = () => shareToKakao(savedNumbers);
-            numbersContainer.appendChild(shareButton);
+
+            buttonContainer.appendChild(saveButton);
+            buttonContainer.appendChild(shareButton);
+            numbersContainer.appendChild(buttonContainer);
         }
 
         function generateStatisticalBasedNumbers() {
