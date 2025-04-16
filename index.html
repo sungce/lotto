@@ -661,26 +661,6 @@
             numbersContainer.innerHTML = ""; // Clear previous numbers
             savedNumbers = []; // Reset saved numbers
 
-            // Create table structure
-            const table = document.createElement("table");
-            table.style.width = "100%";
-            table.style.marginTop = "20px";
-            table.style.borderCollapse = "separate";
-            table.style.borderSpacing = "0 10px";
-
-            // Add table header
-            const thead = document.createElement("thead");
-            const headerRow = document.createElement("tr");
-            headerRow.innerHTML = `
-                <th style="width: 20%; text-align: center;">세트</th>
-                <th style="width: 80%; text-align: center;">추천 번호</th>
-            `;
-            thead.appendChild(headerRow);
-            table.appendChild(thead);
-
-            // Add table body
-            const tbody = document.createElement("tbody");
-
             for (let i = 0; i < setCount; i++) {
                 let numbers;
                 if (recommendationType === 'statistical') {
@@ -690,36 +670,45 @@
                 }
                 savedNumbers.push(numbers); // Save numbers
 
-                const row = document.createElement("tr");
-                row.style.backgroundColor = "#f9f9f9";
-                row.style.borderRadius = "8px";
+                const numberSetDiv = document.createElement("div");
+                numberSetDiv.className = "number-set";
+                numberSetDiv.style.marginBottom = "20px";
 
-                // Create numbers display with colors
-                const numbersDisplay = numbers.map(num => {
-                    let colorClass = "";
+                const setLabel = document.createElement("div");
+                setLabel.className = "set-label";
+                setLabel.textContent = `세트 ${i + 1}`;
+                numberSetDiv.appendChild(setLabel);
+
+                const numbersDisplay = document.createElement("div");
+                numbersDisplay.style.display = "flex";
+                numbersDisplay.style.justifyContent = "center";
+                numbersDisplay.style.gap = "5px";
+                numbersDisplay.style.flexWrap = "wrap";
+
+                numbers.forEach(num => {
+                    const numberDiv = document.createElement("div");
+                    numberDiv.className = "lotto-number";
+
+                    // Add color class based on number range
                     if (num >= 1 && num <= 10) {
-                        colorClass = "number-1-10";
+                        numberDiv.classList.add("number-1-10");
                     } else if (num >= 11 && num <= 20) {
-                        colorClass = "number-11-20";
+                        numberDiv.classList.add("number-11-20");
                     } else if (num >= 21 && num <= 30) {
-                        colorClass = "number-21-30";
+                        numberDiv.classList.add("number-21-30");
                     } else if (num >= 31 && num <= 40) {
-                        colorClass = "number-31-40";
+                        numberDiv.classList.add("number-31-40");
                     } else if (num >= 41 && num <= 45) {
-                        colorClass = "number-41-45";
+                        numberDiv.classList.add("number-41-45");
                     }
-                    return `<div class="lotto-number ${colorClass}">${num}</div>`;
-                }).join("");
 
-                row.innerHTML = `
-                    <td style="text-align: center; padding: 10px;">세트 ${i + 1}</td>
-                    <td style="text-align: center; padding: 10px;"><div style="display: flex; justify-content: center; gap: 5px;">${numbersDisplay}</div></td>
-                `;
-                tbody.appendChild(row);
+                    numberDiv.textContent = num;
+                    numbersDisplay.appendChild(numberDiv);
+                });
+
+                numberSetDiv.appendChild(numbersDisplay);
+                numbersContainer.appendChild(numberSetDiv);
             }
-
-            table.appendChild(tbody);
-            numbersContainer.appendChild(table);
 
             // 버튼 컨테이너 생성
             const buttonContainer = document.createElement("div");
@@ -746,68 +735,52 @@
             numbersContainer.appendChild(buttonContainer);
         }
 
-        // 페이지 로드 시 저장된 번호 복원
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedNumbersStr = localStorage.getItem('savedLottoNumbers');
-            if (savedNumbersStr) {
-                savedNumbers = JSON.parse(savedNumbersStr);
-                displaySavedNumbers();
-            }
-            toggleStatsRecommendationBox();
-        });
-
         function displaySavedNumbers() {
             const numbersContainer = document.getElementById("random-numbers");
             if (!numbersContainer) return;
 
             numbersContainer.innerHTML = "";
-            const table = document.createElement("table");
-            table.style.width = "100%";
-            table.style.marginTop = "20px";
-            table.style.borderCollapse = "separate";
-            table.style.borderSpacing = "0 10px";
-
-            const thead = document.createElement("thead");
-            const headerRow = document.createElement("tr");
-            headerRow.innerHTML = `
-                <th style="width: 20%; text-align: center;">세트</th>
-                <th style="width: 80%; text-align: center;">추천 번호</th>
-            `;
-            thead.appendChild(headerRow);
-            table.appendChild(thead);
-
-            const tbody = document.createElement("tbody");
 
             savedNumbers.forEach((numbers, index) => {
-                const row = document.createElement("tr");
-                row.style.backgroundColor = "#f9f9f9";
-                row.style.borderRadius = "8px";
+                const numberSetDiv = document.createElement("div");
+                numberSetDiv.className = "number-set";
+                numberSetDiv.style.marginBottom = "20px";
 
-                const numbersDisplay = numbers.map(num => {
-                    let colorClass = "";
+                const setLabel = document.createElement("div");
+                setLabel.className = "set-label";
+                setLabel.textContent = `세트 ${index + 1}`;
+                numberSetDiv.appendChild(setLabel);
+
+                const numbersDisplay = document.createElement("div");
+                numbersDisplay.style.display = "flex";
+                numbersDisplay.style.justifyContent = "center";
+                numbersDisplay.style.gap = "5px";
+                numbersDisplay.style.flexWrap = "wrap";
+
+                numbers.forEach(num => {
+                    const numberDiv = document.createElement("div");
+                    numberDiv.className = "lotto-number";
+
+                    // Add color class based on number range
                     if (num >= 1 && num <= 10) {
-                        colorClass = "number-1-10";
+                        numberDiv.classList.add("number-1-10");
                     } else if (num >= 11 && num <= 20) {
-                        colorClass = "number-11-20";
+                        numberDiv.classList.add("number-11-20");
                     } else if (num >= 21 && num <= 30) {
-                        colorClass = "number-21-30";
+                        numberDiv.classList.add("number-21-30");
                     } else if (num >= 31 && num <= 40) {
-                        colorClass = "number-31-40";
+                        numberDiv.classList.add("number-31-40");
                     } else if (num >= 41 && num <= 45) {
-                        colorClass = "number-41-45";
+                        numberDiv.classList.add("number-41-45");
                     }
-                    return `<div class="lotto-number ${colorClass}">${num}</div>`;
-                }).join("");
 
-                row.innerHTML = `
-                    <td style="text-align: center; padding: 10px;">세트 ${index + 1}</td>
-                    <td style="text-align: center; padding: 10px;"><div style="display: flex; justify-content: center; gap: 5px;">${numbersDisplay}</div></td>
-                `;
-                tbody.appendChild(row);
+                    numberDiv.textContent = num;
+                    numbersDisplay.appendChild(numberDiv);
+                });
+
+                numberSetDiv.appendChild(numbersDisplay);
+                numbersContainer.appendChild(numberSetDiv);
             });
-
-            table.appendChild(tbody);
-            numbersContainer.appendChild(table);
 
             // 버튼 컨테이너 생성
             const buttonContainer = document.createElement("div");
@@ -1147,29 +1120,14 @@
 
             // 카카오링크 API 호출
             Kakao.Link.sendDefault({
-                objectType: 'feed',
-                content: {
-                    title: '로또 번호 추천 결과',
-                    description: shareText,
-                    imageUrl: 'data:image/jpeg;base64,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', // 실제 이미지 URL로 변경 필요
-                    link: {
-                        mobileWebUrl: window.location.href,
-                        webUrl: window.location.href,
-                    },
+                objectType: 'text',
+                text: shareText,
+                link: {
+                    mobileWebUrl: window.location.href,
+                    webUrl: window.location.href,
                 },
-                buttons: [
-                    {
-                        title: '로또 번호 추천 사이트 방문',
-                        link: {
-                            mobileWebUrl: window.location.href,
-                            webUrl: window.location.href,
-                        },
-                    },
-                ],
                 success: function(response) {
                     console.log('카카오링크 공유 성공:', response);
-                    // 공유 성공 후 저장된 번호 다시 표시
-                    displaySavedNumbers();
                 },
                 fail: function(error) {
                     console.error('카카오링크 공유 실패:', error);
