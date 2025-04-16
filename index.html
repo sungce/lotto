@@ -1095,46 +1095,27 @@
 
         // 카카오톡 공유 함수
         function shareToKakao(numbers) {
-            try {
-                // 공유할 텍스트 생성
-                let shareText = "✨ 로또 번호 추천 결과 ✨\n\n";
-                
-                numbers.forEach((set, index) => {
-                    shareText += `세트 ${index + 1}: ${set.join(", ")}\n`;
-                });
-                
-                shareText += "\n🍀 행운을 빕니다! 🍀";
+            // 공유할 텍스트 생성
+            let shareText = "✨ 로또 번호 추천 결과 ✨\n\n";
+            
+            numbers.forEach((set, index) => {
+                shareText += `세트 ${index + 1}: ${set.join(", ")}\n`;
+            });
+            
+            shareText += "\n🍀 행운을 빕니다! 🍀";
 
-                // 카카오톡 공유
-                Kakao.Share.sendCustom({
-                    templateId: 100000,
-                    templateArgs: {
-                        title: '로또 번호 추천',
-                        description: shareText
-                    },
-                    success: function(response) {
-                        console.log('카카오톡 공유 성공:', response);
-                    },
-                    fail: function(error) {
-                        console.error('카카오톡 공유 실패:', error);
-                        // 기본 텍스트 공유로 폴백
-                        Kakao.Share.sendDefault({
-                            objectType: 'text',
-                            text: shareText,
-                            success: function(response) {
-                                console.log('카카오톡 공유 성공:', response);
-                            },
-                            fail: function(error) {
-                                console.error('카카오톡 공유 실패:', error);
-                                alert('카카오톡 공유에 실패했습니다. 다시 시도해주세요.');
-                            }
-                        });
-                    }
-                });
-            } catch (error) {
-                console.error('카카오톡 공유 중 오류 발생:', error);
-                alert('카카오톡 공유 중 오류가 발생했습니다. 다시 시도해주세요.');
-            }
+            // 카카오톡 공유
+            Kakao.Share.sendDefault({
+                objectType: 'text',
+                text: shareText,
+                success: function(response) {
+                    console.log('카카오톡 공유 성공:', response);
+                },
+                fail: function(error) {
+                    console.error('카카오톡 공유 실패:', error);
+                    alert('카카오톡 공유에 실패했습니다. 다시 시도해주세요.');
+                }
+            });
         }
 
     </script>
