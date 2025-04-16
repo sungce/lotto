@@ -149,11 +149,11 @@
 
         .number-set {
             text-align: center;
-            background-color: #f9f9f9; /* Light background for each set */
-            padding: 15px;
+            background-color: #f9f9f9;
+            padding: 10px; /* Reduced from 15px */
             border-radius: 8px;
             border: 1px solid #eee;
-            min-width: 280px; /* Ensure enough width for numbers */
+            min-width: 250px; /* Reduced from 280px */
             box-sizing: border-box;
         }
 
@@ -168,15 +168,15 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 35px;  /* Reduced from 40px */
-            height: 35px; /* Reduced from 40px */
+            width: 30px;  /* Reduced from 35px */
+            height: 30px; /* Reduced from 35px */
             border-radius: 50%;
-            margin: 4px;
+            margin: 2px;  /* Reduced from 4px */
             font-weight: bold;
             color: white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             transition: transform 0.3s ease;
-            font-size: 14px; /* Added font size */
+            font-size: 12px; /* Reduced from 14px */
         }
 
         .lotto-number:hover {
@@ -1096,32 +1096,49 @@
 
         // 카카오톡 공유 함수
         function shareToKakao(numbers) {
-            if (!Kakao.isInitialized()) {
-                alert('카카오톡 공유를 위해 카카오 SDK를 초기화합니다.');
-                Kakao.init('7bbaa2166711a20e94677d8ed098b216');
+            try {
+                // 공유할 텍스트 생성
+                let shareText = "✨ 로또 번호 추천 결과 ✨\n\n";
+                
+                numbers.forEach((set, index) => {
+                    shareText += `세트 ${index + 1}: ${set.join(", ")}\n`;
+                });
+                
+                shareText += "\n🍀 행운을 빕니다! 🍀";
+
+                // 카카오톡 공유
+                Kakao.Share.sendDefault({
+                    objectType: 'feed',
+                    content: {
+                        title: '로또 번호 추천',
+                        description: shareText,
+                        imageUrl: 'https://example.com/lotto.png', // 실제 이미지 URL로 변경 필요
+                        link: {
+                            mobileWebUrl: window.location.href,
+                            webUrl: window.location.href,
+                        },
+                    },
+                    buttons: [
+                        {
+                            title: '추천 번호 보기',
+                            link: {
+                                mobileWebUrl: window.location.href,
+                                webUrl: window.location.href,
+                            },
+                        },
+                    ],
+                    success: function(response) {
+                        console.log('카카오톡 공유 성공:', response);
+                    },
+                    fail: function(error) {
+                        console.error('카카오톡 공유 실패:', error);
+                        alert('카카오톡 공유에 실패했습니다. 다시 시도해주세요.');
+                    }
+                });
+            } catch (error) {
+                console.error('카카오톡 공유 중 오류 발생:', error);
+                alert('카카오톡 공유 중 오류가 발생했습니다. 다시 시도해주세요.');
             }
-
-            // 공유할 텍스트 생성
-            let shareText = "✨ 로또 번호 추천 결과 ✨\n\n";
-            
-            numbers.forEach((set, index) => {
-                shareText += `세트 ${index + 1}: ${set.join(", ")}\n`;
-            });
-            
-            shareText += "\n🍀 행운을 빕니다! 🍀";
-
-            // 카카오톡 공유
-            Kakao.Share.sendDefault({
-                objectType: 'text',
-                text: shareText,
-                success: function(response) {
-                    console.log('카카오톡 공유 성공:', response);
-                },
-                fail: function(error) {
-                    console.error('카카오톡 공유 실패:', error);
-                    alert('카카오톡 공유에 실패했습니다. 다시 시도해주세요.');
-                }
-            });
         }
 
     </script>
