@@ -1106,25 +1106,8 @@
 
             // 카카오톡 공유
             Kakao.Share.sendDefault({
-                objectType: 'feed',
-                content: {
-                    title: '로또 번호 추천',
-                    description: shareText,
-                    imageUrl: 'https://example.com/lotto.png', // 실제 이미지 URL로 변경 필요
-                    link: {
-                        mobileWebUrl: window.location.href,
-                        webUrl: window.location.href,
-                    },
-                },
-                buttons: [
-                    {
-                        title: '추천 번호 보기',
-                        link: {
-                            mobileWebUrl: window.location.href,
-                            webUrl: window.location.href,
-                        },
-                    },
-                ],
+                objectType: 'text',
+                text: shareText,
                 success: function(response) {
                     console.log('카카오톡 공유 성공:', response);
                 },
