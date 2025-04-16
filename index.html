@@ -166,14 +166,15 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
+            width: 35px;  /* Reduced from 40px */
+            height: 35px; /* Reduced from 40px */
             border-radius: 50%;
             margin: 4px;
             font-weight: bold;
             color: white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             transition: transform 0.3s ease;
+            font-size: 14px; /* Added font size */
         }
 
         .lotto-number:hover {
@@ -1103,17 +1104,7 @@
             let shareText = "✨ 로또 번호 추천 결과 ✨\n\n";
             
             numbers.forEach((set, index) => {
-                const coloredNumbers = set.map(num => {
-                    let color = "";
-                    if (num >= 1 && num <= 10) color = "노란색";
-                    else if (num >= 11 && num <= 20) color = "초록색";
-                    else if (num >= 21 && num <= 30) color = "빨간색";
-                    else if (num >= 31 && num <= 40) color = "파란색";
-                    else if (num >= 41 && num <= 45) color = "보라색";
-                    return `${num}(${color})`;
-                }).join(", ");
-                
-                shareText += `세트 ${index + 1}: ${coloredNumbers}\n`;
+                shareText += `세트 ${index + 1}: ${set.join(", ")}\n`;
             });
             
             shareText += "\n🍀 행운을 빕니다! 🍀";
