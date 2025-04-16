@@ -7,7 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
     <script>
+        // 카카오 SDK 초기화
         Kakao.init('7bbaa2166711a20e94677d8ed098b216');
+        Kakao.isInitialized();
     </script>
     <style>
         body {
@@ -1092,12 +1094,11 @@
              // generateRecommendedNumbers();
         });
 
-        // 카카오링크 API를 사용한 공유 함수
+        // 카카오톡 공유 함수
         function shareToKakao(numbers) {
-            // 카카오 SDK 초기화 확인
             if (!Kakao.isInitialized()) {
-                alert('카카오 SDK가 초기화되지 않았습니다.');
-                return;
+                alert('카카오톡 공유를 위해 카카오 SDK를 초기화합니다.');
+                Kakao.init('7bbaa2166711a20e94677d8ed098b216');
             }
 
             // 공유할 텍스트 생성
@@ -1109,15 +1110,15 @@
             
             shareText += "\n🍀 행운을 빕니다! 🍀";
 
-            // 카카오링크 API 호출
-            Kakao.Link.sendDefault({
+            // 카카오톡 공유
+            Kakao.Share.sendDefault({
                 objectType: 'text',
                 text: shareText,
                 success: function(response) {
-                    console.log('카카오링크 공유 성공:', response);
+                    console.log('카카오톡 공유 성공:', response);
                 },
                 fail: function(error) {
-                    console.error('카카오링크 공유 실패:', error);
+                    console.error('카카오톡 공유 실패:', error);
                     alert('카카오톡 공유에 실패했습니다. 다시 시도해주세요.');
                 }
             });
