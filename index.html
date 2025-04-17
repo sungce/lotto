@@ -5,11 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로또 번호 추천 사이트</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
-    <script>
-        // 카카오 SDK 초기화
-        Kakao.init('7bbaa2166711a20e94677d8ed098b216');
-    </script>
     <style>
         body {
             font-family: 'Noto Sans KR', sans-serif;
@@ -119,7 +114,6 @@
             padding-left: 10px;
         }
 
-
         button {
             background-color: #0066cc;
             color: white;
@@ -188,7 +182,6 @@
         .number-31-40 { background-color: #1e88e5; } /* 파란색 */
         .number-41-45 { background-color: #5e35b1; } /* 보라색 */
 
-
         /* Bonus number styling adjustment */
         .draw-numbers .lotto-number:last-child {
             position: relative;
@@ -207,7 +200,6 @@
              background-color: #ff9800; /* Orange for bonus */
              color: white;
         }
-
 
         .history {
             margin: 20px auto;
@@ -244,7 +236,6 @@
              margin: 3px; /* Smaller margin for inline display */
         }
 
-
         .draw-info {
             margin: 25px auto; /* Increased margin */
             padding: 20px; /* Increased padding */
@@ -273,7 +264,6 @@
             gap: 8px; /* Gap between balls */
             padding-bottom: 10px; /* Space below numbers */
         }
-
 
         .search-container {
             margin-top: 25px; /* Increased margin */
@@ -327,7 +317,6 @@
             padding-left: 10px;
         }
 
-
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(40px, 1fr)); /* Responsive grid */
@@ -365,7 +354,6 @@
             align-items: center;
             justify-content: center;
          }
-
 
         /* Use distinct, accessible colors for stats */
         .stats-cell-hot { background-color: #ffcdd2; } /* Light Red */
@@ -468,6 +456,36 @@
             transform: scale(1.1);
         }
 
+        /* 클립보드 복사 알림 스타일 */
+        .copy-notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 4px;
+            z-index: 1000;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .copy-notification.show {
+            display: block;
+            opacity: 1;
+        }
+
+        /* 공유 버튼 스타일 */
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .copy-share-btn {
+            background-color: #5f6368;
+        }
     </style>
 </head>
 <body>
@@ -605,7 +623,250 @@
         </div>
     </div>
 
+    <!-- 클립보드 복사 알림 -->
+    <div id="copyNotification" class="copy-notification">복사되었습니다!</div>
+
     <script>
+        // 클립보드 복사 함수
+        function copyNumbersToClipboard(numbers) {
+            // 공유할 텍스트 생성
+            let shareText = "✨ SUNGCE 로또 번호 추천 결과 ✨\n\n";
+            
+            numbers.forEach((set, index) => {
+                shareText += `세트 ${index + 1}: ${set.join(", ")}\n`;
+            });
+            
+            shareText += "\n🍀 행운을 빕니다! 🍀";
+
+            // 클립보드에 복사
+            navigator.clipboard.writeText(shareText)
+                .then(() => {
+                    showCopyNotification();
+                })
+                .catch(err => {
+                    console.error('클립보드 복사 실패:', err);
+                    alert('클립보드 복사에 실패했습니다. 다시 시도해주세요.');
+                });
+        }
+
+        // 복사 알림 표시
+        function showCopyNotification() {
+            const notification = document.getElementById('copyNotification');
+            notification.classList.add('show');
+            
+            // 3초 후 알림 숨기기
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        function getHotOrColdNumbers(isHot, count) {
+            const sortedNumbers = Object.keys(numberFrequency).sort((a, b) => {
+                const freqA = numberFrequency[a] || 0;
+                const freqB = numberFrequency[b] || 0;
+                return isHot ? freqB - freqA : freqA - freqB; // Sort descending for hot, ascending for cold
+            });
+            return sortedNumbers.slice(0, count).map(num => parseInt(num));
+        }
+
+        // --- Custom Number Generation ---
+        function generateCustomNumbers() {
+            const birthdayInput = document.getElementById("birthday").value;
+            const luckyNumberInput = document.getElementById("lucky-number").value;
+            const excludeInput = document.getElementById("exclude-numbers").value;
+            const numbersContainer = document.getElementById("custom-numbers");
+
+            numbersContainer.innerHTML = ""; // Clear previous numbers
+
+            let initialNumbers = [];
+            let excludeNumbers = [];
+
+            // Process lucky number
+            if (luckyNumberInput) {
+                const luckyNumber = parseInt(luckyNumberInput);
+                if (!isNaN(luckyNumber) && luckyNumber >= 1 && luckyNumber <= 45) {
+                    initialNumbers.push(luckyNumber);
+                }
+            }
+
+            // Process birthday
+            if (birthdayInput) {
+                const date = new Date(birthdayInput);
+                const day = date.getDate();
+                const month = date.getMonth() + 1;
+                const yearDigits = date.getFullYear().toString().split('').map(d => parseInt(d));
+                
+                let bdNumbers = [day, month];
+                let yearSum = yearDigits.reduce((a, b) => a + b, 0);
+                if (yearSum >= 1 && yearSum <= 45) bdNumbers.push(yearSum);
+                 
+                bdNumbers.forEach(num => {
+                    if (num >= 1 && num <= 45 && !initialNumbers.includes(num)) {
+                        initialNumbers.push(num);
+                    }
+                });
+            }
+
+            // Process exclude numbers
+            if (excludeInput.trim()) {
+                excludeNumbers = excludeInput
+                    .split(',')
+                    .map(numStr => parseInt(numStr.trim()))
+                    .filter(num => !isNaN(num) && num >= 1 && num <= 45);
+            }
+            
+            initialNumbers = initialNumbers.filter(num => !excludeNumbers.includes(num));
+            initialNumbers = [...new Set(initialNumbers)];
+            
+            if (initialNumbers.length > 6) {
+                alert("포함할 숫자가 6개를 초과합니다. 행운 숫자와 생년월일 숫자를 확인해주세요.");
+                return;
+            }
+
+            const customNumbers = generateLottoNumbers(initialNumbers, excludeNumbers);
+            
+            const numberSetDiv = document.createElement("div");
+            numberSetDiv.className = "number-set";
+            
+            const numbersDisplay = document.createElement("div");
+            numbersDisplay.style.display = "flex";
+            numbersDisplay.style.justifyContent = "center";
+            numbersDisplay.style.gap = "5px";
+            numbersDisplay.style.flexWrap = "wrap";
+            
+            customNumbers.forEach(num => {
+                const numberDiv = document.createElement("div");
+                numberDiv.className = "lotto-number";
+                
+                // Add color class based on number range
+                if (num >= 1 && num <= 10) {
+                    numberDiv.classList.add("number-1-10");
+                } else if (num >= 11 && num <= 20) {
+                    numberDiv.classList.add("number-11-20");
+                } else if (num >= 21 && num <= 30) {
+                    numberDiv.classList.add("number-21-30");
+                } else if (num >= 31 && num <= 40) {
+                    numberDiv.classList.add("number-31-40");
+                } else if (num >= 41 && num <= 45) {
+                    numberDiv.classList.add("number-41-45");
+                }
+                
+                numberDiv.textContent = num;
+                numbersDisplay.appendChild(numberDiv);
+            });
+            
+            numberSetDiv.appendChild(numbersDisplay);
+            numbersContainer.appendChild(numberSetDiv);
+            
+            // 복사 버튼 추가
+            const copyButton = document.createElement("button");
+            copyButton.textContent = "번호 복사하기";
+            copyButton.className = "copy-share-btn";
+            copyButton.onclick = () => copyNumbersToClipboard([customNumbers]);
+            copyButton.style.marginTop = "20px";
+            numbersContainer.appendChild(copyButton);
+        }
+        
+        // --- Statistics Tab Specific ---
+        function generateStatisticalNumbers() {
+            const numbersContainer = document.getElementById("statistical-numbers");
+            numbersContainer.innerHTML = ""; // Clear previous numbers
+
+            const statsBasedNumbers = generateStatisticalBasedNumbers();
+            
+            const numberSetDiv = document.createElement("div");
+            numberSetDiv.className = "number-set";
+            
+            const numbersDisplay = document.createElement("div");
+            numbersDisplay.style.display = "flex";
+            numbersDisplay.style.justifyContent = "center";
+            numbersDisplay.style.gap = "5px";
+            numbersDisplay.style.flexWrap = "wrap";
+            
+            statsBasedNumbers.forEach(num => {
+                const numberDiv = document.createElement("div");
+                numberDiv.className = "lotto-number";
+                
+                // Add color class based on number range
+                if (num >= 1 && num <= 10) {
+                    numberDiv.classList.add("number-1-10");
+                } else if (num >= 11 && num <= 20) {
+                    numberDiv.classList.add("number-11-20");
+                } else if (num >= 21 && num <= 30) {
+                    numberDiv.classList.add("number-21-30");
+                } else if (num >= 31 && num <= 40) {
+                    numberDiv.classList.add("number-31-40");
+                } else if (num >= 41 && num <= 45) {
+                    numberDiv.classList.add("number-41-45");
+                }
+                
+                numberDiv.textContent = num;
+                numbersDisplay.appendChild(numberDiv);
+            });
+            
+            numberSetDiv.appendChild(numbersDisplay);
+            numbersContainer.appendChild(numberSetDiv);
+            
+            // 복사 버튼 추가
+            const copyButton = document.createElement("button");
+            copyButton.textContent = "번호 복사하기";
+            copyButton.className = "copy-share-btn";
+            copyButton.onclick = () => copyNumbersToClipboard([statsBasedNumbers]);
+            copyButton.style.marginTop = "20px";
+            numbersContainer.appendChild(copyButton);
+        }
+
+        function generateNumberStats() {
+            const statsGrid = document.getElementById("number-stats-grid");
+            if (statsGrid.childElementCount > 0) return; // Avoid regenerating if already populated
+
+            statsGrid.innerHTML = ""; // Clear previous grid
+
+            const range = maxFreq - minFreq;
+            const thresholdHot = minFreq + (range * 0.66); // Top 33% are hot
+            const thresholdCold = minFreq + (range * 0.33); // Bottom 33% are cold
+
+            for (let i = 1; i <= 45; i++) {
+                const freq = numberFrequency[i] || 0;
+                const cell = document.createElement("div");
+                cell.className = "stats-cell";
+
+                // Determine color class
+                if (freq >= thresholdHot) {
+                    cell.classList.add("stats-cell-hot");
+                } else if (freq < thresholdCold) {
+                    cell.classList.add("stats-cell-cold");
+                } else {
+                    cell.classList.add("stats-cell-warm");
+                }
+
+                // Create content div for centering
+                const contentDiv = document.createElement("div");
+                contentDiv.className = "stats-cell-content";
+                contentDiv.textContent = i;
+                cell.appendChild(contentDiv);
+
+                // Add frequency indicator
+                const freqSpan = document.createElement("span");
+                freqSpan.className = "frequency";
+                freqSpan.textContent = freq;
+                cell.appendChild(freqSpan); // Append frequency span directly to cell
+
+                statsGrid.appendChild(cell);
+            }
+        }
+        
+        // --- Core Lotto Number Generation Logic ---
+        // --- Initial Setup ---
+        // Call toggle function initially to set the correct state for the recommendation box
+        document.addEventListener('DOMContentLoaded', () => {
+            toggleStatsRecommendationBox();
+            // Generate stats grid on initial load
+            generateNumberStats();
+        });
+    </script>
+</body>
+</html>
         // Number frequency data (Example data - replace with real data if available)
         const numberFrequency = {
             1: 125, 2: 137, 3: 154, 4: 129, 5: 143, 6: 138, 7: 167, 8: 116, 9: 142,
@@ -646,11 +907,11 @@
         }
 
         // --- Random Number Generation ---
-         function toggleStatsRecommendationBox() {
-             const recommendationType = document.getElementById("recommendation-type").value;
-             const statsRecommendationBox = document.getElementById("stats-recommendation-box");
-             statsRecommendationBox.style.display = (recommendationType === 'statistical') ? "block" : "none";
-         }
+        function toggleStatsRecommendationBox() {
+            const recommendationType = document.getElementById("recommendation-type").value;
+            const statsRecommendationBox = document.getElementById("stats-recommendation-box");
+            statsRecommendationBox.style.display = (recommendationType === 'statistical') ? "block" : "none";
+        }
 
         // 전역 변수로 생성된 번호 저장
         let savedNumbers = [];
@@ -712,12 +973,13 @@
                 numbersContainer.appendChild(numberSetDiv);
             }
 
-            // 공유 버튼만 추가
-            const shareButton = document.createElement("button");
-            shareButton.textContent = "카카오톡 공유";
-            shareButton.onclick = () => shareToKakao(savedNumbers);
-            shareButton.style.marginTop = "20px";
-            numbersContainer.appendChild(shareButton);
+            // 공유 버튼 대신 클립보드 복사 버튼 추가
+            const copyButton = document.createElement("button");
+            copyButton.textContent = "번호 복사하기";
+            copyButton.className = "copy-share-btn";
+            copyButton.onclick = () => copyNumbersToClipboard(savedNumbers);
+            copyButton.style.marginTop = "20px";
+            numbersContainer.appendChild(copyButton);
         }
 
         function generateStatisticalBasedNumbers() {
@@ -763,272 +1025,3 @@
             }
 
             return numbers.sort((a, b) => a - b);
-        }
-
-        function getHotOrColdNumbers(isHot, count) {
-            const sortedNumbers = Object.keys(numberFrequency).sort((a, b) => {
-                const freqA = numberFrequency[a] || 0;
-                const freqB = numberFrequency[b] || 0;
-                return isHot ? freqB - freqA : freqA - freqB; // Sort descending for hot, ascending for cold
-            });
-            return sortedNumbers.slice(0, count).map(num => parseInt(num));
-        }
-
-
-        // --- Custom Number Generation ---
-        function generateCustomNumbers() {
-            const birthdayInput = document.getElementById("birthday").value;
-            const luckyNumberInput = document.getElementById("lucky-number").value;
-            const excludeInput = document.getElementById("exclude-numbers").value;
-            const numbersContainer = document.getElementById("custom-numbers");
-
-            numbersContainer.innerHTML = ""; // Clear previous numbers
-
-            let initialNumbers = [];
-            let excludeNumbers = [];
-
-            // Process lucky number
-            if (luckyNumberInput) {
-                const luckyNumber = parseInt(luckyNumberInput);
-                if (!isNaN(luckyNumber) && luckyNumber >= 1 && luckyNumber <= 45) {
-                    initialNumbers.push(luckyNumber);
-                }
-            }
-
-            // Process birthday
-            if (birthdayInput) {
-                const date = new Date(birthdayInput);
-                const day = date.getDate();
-                const month = date.getMonth() + 1;
-                const yearDigits = date.getFullYear().toString().split('').map(d => parseInt(d));
-                
-                let bdNumbers = [day, month];
-                let yearSum = yearDigits.reduce((a, b) => a + b, 0);
-                if (yearSum >= 1 && yearSum <= 45) bdNumbers.push(yearSum);
-                 
-                bdNumbers.forEach(num => {
-                    if (num >= 1 && num <= 45 && !initialNumbers.includes(num)) {
-                        initialNumbers.push(num);
-                    }
-                });
-            }
-
-            // Process exclude numbers
-            if (excludeInput.trim()) {
-                excludeNumbers = excludeInput
-                    .split(',')
-                    .map(numStr => parseInt(numStr.trim()))
-                    .filter(num => !isNaN(num) && num >= 1 && num <= 45);
-            }
-            
-            initialNumbers = initialNumbers.filter(num => !excludeNumbers.includes(num));
-            initialNumbers = [...new Set(initialNumbers)];
-            
-            if (initialNumbers.length > 6) {
-                alert("포함할 숫자가 6개를 초과합니다. 행운 숫자와 생년월일 숫자를 확인해주세요.");
-                return;
-            }
-
-            const customNumbers = generateLottoNumbers(initialNumbers, excludeNumbers);
-            displayNumbers(customNumbers, numbersContainer);
-        }
-
-        // --- Statistics Tab Specific ---
-        function generateStatisticalNumbers() {
-            const numbersContainer = document.getElementById("statistical-numbers");
-            numbersContainer.innerHTML = ""; // Clear previous numbers
-
-            const statsBasedNumbers = generateStatisticalBasedNumbers();
-            displayNumbers(statsBasedNumbers, numbersContainer, 1); // Display as Set 1
-        }
-
-        function generateNumberStats() {
-            const statsGrid = document.getElementById("number-stats-grid");
-            if (statsGrid.childElementCount > 0) return; // Avoid regenerating if already populated
-
-            statsGrid.innerHTML = ""; // Clear previous grid
-
-            const range = maxFreq - minFreq;
-            const thresholdHot = minFreq + (range * 0.66); // Top 33% are hot
-            const thresholdCold = minFreq + (range * 0.33); // Bottom 33% are cold
-
-            for (let i = 1; i <= 45; i++) {
-                const freq = numberFrequency[i] || 0;
-                const cell = document.createElement("div");
-                cell.className = "stats-cell";
-
-                // Determine color class
-                if (freq >= thresholdHot) {
-                    cell.classList.add("stats-cell-hot");
-                } else if (freq < thresholdCold) {
-                    cell.classList.add("stats-cell-cold");
-                } else {
-                    cell.classList.add("stats-cell-warm");
-                }
-
-                // Create content div for centering
-                 const contentDiv = document.createElement("div");
-                 contentDiv.className = "stats-cell-content";
-                 contentDiv.textContent = i;
-                 cell.appendChild(contentDiv);
-
-
-                // Add frequency indicator
-                const freqSpan = document.createElement("span");
-                freqSpan.className = "frequency";
-                freqSpan.textContent = freq;
-                cell.appendChild(freqSpan); // Append frequency span directly to cell
-
-                statsGrid.appendChild(cell);
-            }
-        }
-
-
-        // --- Core Lotto Number Generation Logic ---
-        function generateLottoNumbers(initialNumbers = [], excludeNumbers = [], useWeights = false) {
-            let numbers = [...new Set(initialNumbers)]; // Ensure initial numbers are unique
-            
-             // Validate initial numbers
-             if (numbers.some(num => num < 1 || num > 45)) {
-                console.error("Invalid initial number detected.");
-                numbers = numbers.filter(num => num >= 1 && num <= 45);
-            }
-             if (numbers.length > 6) {
-                 console.warn("More than 6 initial numbers provided, using only the first 6 valid ones.");
-                 numbers = numbers.slice(0, 6);
-             }
-
-
-            const availableNumbersPool = [];
-            for (let i = 1; i <= 45; i++) {
-                if (!numbers.includes(i) && !excludeNumbers.includes(i)) {
-                    if (useWeights) {
-                        // Add number based on frequency (minimum 1)
-                        const weight = Math.max(1, numberFrequency[i] || 1);
-                        for (let j = 0; j < weight; j++) {
-                            availableNumbersPool.push(i);
-                        }
-                    } else {
-                        availableNumbersPool.push(i);
-                    }
-                }
-            }
-
-            // Fisher-Yates (Knuth) Shuffle for the pool if weighted
-             if (useWeights) {
-                for (let i = availableNumbersPool.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [availableNumbersPool[i], availableNumbersPool[j]] = [availableNumbersPool[j], availableNumbersPool[i]];
-                }
-             }
-
-
-            // Pick remaining numbers
-            while (numbers.length < 6 && availableNumbersPool.length > 0) {
-                 const randomIndex = Math.floor(Math.random() * availableNumbersPool.length);
-                 const pickedNumber = availableNumbersPool[randomIndex];
-
-                if (!numbers.includes(pickedNumber)) {
-                    numbers.push(pickedNumber);
-                }
-
-                 // If weighted, remove all instances of the picked number to avoid duplicates in the *selection*
-                 // If not weighted, just remove the one instance
-                 if (useWeights) {
-                     // Filter out all occurrences of the picked number for next draw
-                    const originalLength = availableNumbersPool.length;
-                    let k = originalLength - 1;
-                    while (k >= 0) {
-                        if (availableNumbersPool[k] === pickedNumber) {
-                            availableNumbersPool.splice(k, 1);
-                        }
-                        k--;
-                    }
-                 } else {
-                    availableNumbersPool.splice(randomIndex, 1); // Remove the single picked number
-                 }
-            }
-
-            // Final sort
-            return numbers.sort((a, b) => a - b);
-        }
-
-        // --- Display Logic ---
-        function displayNumbers(numbers, container, setNumber = null) {
-            const numberSetDiv = document.createElement("div");
-            numberSetDiv.className = "number-set";
-
-            if (setNumber !== null) {
-                const setLabel = document.createElement("div");
-                setLabel.className = "set-label";
-                setLabel.textContent = `추천 번호 세트 ${setNumber}`;
-                numberSetDiv.appendChild(setLabel);
-            }
-
-            const numbersContainer = document.createElement("div");
-            numbersContainer.style.display = "flex";
-            numbersContainer.style.justifyContent = "center";
-            numbersContainer.style.gap = "5px";
-            numbersContainer.style.flexWrap = "wrap";
-
-            numbers.forEach(num => {
-                const numberDiv = document.createElement("div");
-                numberDiv.className = "lotto-number";
-
-                // Add color class based on number range
-                if (num >= 1 && num <= 10) {
-                    numberDiv.classList.add("number-1-10");
-                } else if (num >= 11 && num <= 20) {
-                    numberDiv.classList.add("number-11-20");
-                } else if (num >= 21 && num <= 30) {
-                    numberDiv.classList.add("number-21-30");
-                } else if (num >= 31 && num <= 40) {
-                    numberDiv.classList.add("number-31-40");
-                } else if (num >= 41 && num <= 45) {
-                    numberDiv.classList.add("number-41-45");
-                }
-
-                numberDiv.textContent = num;
-                numbersContainer.appendChild(numberDiv);
-            });
-
-            numberSetDiv.appendChild(numbersContainer);
-            container.appendChild(numberSetDiv);
-        }
-
-        // --- Initial Setup ---
-        // Call toggle function initially to set the correct state for the recommendation box
-        document.addEventListener('DOMContentLoaded', () => {
-             toggleStatsRecommendationBox();
-             // You could potentially pre-generate numbers for the default tab here if desired
-             // generateRecommendedNumbers();
-        });
-
-        // 카카오톡 메시지 보내기 함수
-        function shareToKakao(numbers) {
-            // 공유할 텍스트 생성
-            let shareText = "✨ 로또 번호 추천 결과 ✨\n\n";
-            
-            numbers.forEach((set, index) => {
-                shareText += `세트 ${index + 1}: ${set.join(", ")}\n`;
-            });
-            
-            shareText += "\n🍀 행운을 빕니다! 🍀";
-
-            // 카카오톡 메시지 보내기
-            Kakao.Share.sendDefault({
-                objectType: 'text',
-                text: shareText,
-                success: function(response) {
-                    console.log('카카오톡 메시지 전송 성공:', response);
-                },
-                fail: function(error) {
-                    console.error('카카오톡 메시지 전송 실패:', error);
-                    alert('카카오톡 메시지 전송에 실패했습니다. 다시 시도해주세요.');
-                }
-            });
-        }
-
-    </script>
-</body>
-</html>
