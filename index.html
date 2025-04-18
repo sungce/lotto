@@ -185,11 +185,11 @@
             transform: scale(1.2);
         }
 
-        .number-1-10 { background-color: #fbc02d; } /* 노란색 */
-        .number-11-20 { background-color: #43a047; } /* 초록색 */
-        .number-21-30 { background-color: #e53935; } /* 빨간색 */
-        .number-31-40 { background-color: #1e88e5; } /* 파란색 */
-        .number-41-45 { background-color: #5e35b1; } /* 보라색 */
+        .number-1-10 { background-color: #FF6B6B; } /* 1-10: 빨간색 */
+        .number-11-20 { background-color: #4ECDC4; } /* 11-20: 청록색 */
+        .number-21-30 { background-color: #45B7D1; } /* 21-30: 하늘색 */
+        .number-31-40 { background-color: #96CEB4; } /* 31-40: 연두색 */
+        .number-41-45 { background-color: #FFEEAD; } /* 41-45: 연노란색 */
 
 
         /* Bonus number styling adjustment */
@@ -722,13 +722,12 @@
             justify-content: center;
             flex-wrap: wrap;
             gap: 5px;
-            max-width: 300px;
             margin: 0 auto;
             padding: 0 20px;
         }
 
         .cold-numbers .lotto-number {
-            width: 25px; /* Match hot numbers size */
+            width: 25px;
             height: 25px;
             font-size: 12px;
             flex-shrink: 0;
@@ -741,6 +740,7 @@
             font-weight: bold;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             transition: transform 0.3s ease;
+            aspect-ratio: 1;
         }
 
         /* Ensure only 5 numbers are visible */
