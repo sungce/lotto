@@ -167,50 +167,121 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 35px;
-            height: 35px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             margin: 2px;
             font-weight: bold;
             color: white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             transition: transform 0.3s ease;
-            font-size: 14px;
-            aspect-ratio: 1; /* Ensure perfect circle */
-            min-width: 30px; /* Minimum size for mobile */
+            font-size: 16px;
+            aspect-ratio: 1;
+            min-width: 30px;
             min-height: 30px;
+            flex-shrink: 0;
         }
 
         .lotto-number:hover {
             transform: scale(1.2);
         }
 
+        /* Responsive styles for number circles */
+        @media (max-width: 768px) {
+            .lotto-number {
+                width: 35px;
+                height: 35px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .lotto-number {
+                width: 30px;
+                height: 30px;
+                font-size: 12px;
+            }
+        }
+
+        /* Number color groups */
         .number-1-10 { background-color: #FF6B6B; } /* 1-10: 빨간색 */
         .number-11-20 { background-color: #4ECDC4; } /* 11-20: 청록색 */
         .number-21-30 { background-color: #45B7D1; } /* 21-30: 하늘색 */
         .number-31-40 { background-color: #96CEB4; } /* 31-40: 연두색 */
         .number-41-45 { background-color: #FFEEAD; } /* 41-45: 연노란색 */
 
-
-        /* Bonus number styling adjustment */
-        .draw-numbers .lotto-number:last-child {
-            position: relative;
+        /* Hot and cold numbers styles */
+        .hot-numbers, .cold-numbers {
+            text-align: center;
+            margin-bottom: 20px;
         }
-        .draw-numbers .lotto-number:nth-last-child(2)::after {
-            content: "+";
-            position: absolute;
-            right: -15px; /* Position plus sign between last two numbers */
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 24px;
-            color: #FF5722;
+
+        .hot-numbers div, .cold-numbers div {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hot-numbers .lotto-number, .cold-numbers .lotto-number {
+            width: 40px;
+            height: 40px;
+            font-size: 16px;
+            flex-shrink: 0;
+            margin: 2px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: white;
             font-weight: bold;
-        }
-         .draw-numbers .lotto-number:last-child { /* Specific style for bonus ball */
-             background-color: #ff9800; /* Orange for bonus */
-             color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+            aspect-ratio: 1;
         }
 
+        /* Recommendation box number styles */
+        .recommendation-box .lotto-number {
+            width: 40px;
+            height: 40px;
+            font-size: 16px;
+            flex-shrink: 0;
+            margin: 2px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+            aspect-ratio: 1;
+        }
+
+        /* Responsive styles for all number circles */
+        @media (max-width: 768px) {
+            .lotto-number,
+            .hot-numbers .lotto-number,
+            .cold-numbers .lotto-number,
+            .recommendation-box .lotto-number {
+                width: 35px;
+                height: 35px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .lotto-number,
+            .hot-numbers .lotto-number,
+            .cold-numbers .lotto-number,
+            .recommendation-box .lotto-number {
+                width: 30px;
+                height: 30px;
+                font-size: 12px;
+            }
+        }
 
         .history {
             margin: 20px auto;
@@ -234,10 +305,6 @@
             gap: 15px; /* Add gap between hot/cold sections */
         }
 
-        .hot-numbers, .cold-numbers {
-            text-align: center;
-            margin-bottom: 20px;
-        }
         .hot-numbers strong, .cold-numbers strong {
             display: block;
             margin-bottom: 10px;
@@ -455,18 +522,18 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 25px;
-            height: 25px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             margin: 2px;
             font-weight: bold;
             color: white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             transition: transform 0.3s ease;
-            font-size: 12px;
+            font-size: 16px;
             aspect-ratio: 1;
-            min-width: 25px;
-            min-height: 25px;
+            min-width: 30px;
+            min-height: 30px;
             flex-shrink: 0;
         }
 
