@@ -589,6 +589,128 @@
         .number-31-40 { background-color: #96CEB4; }
         .number-41-45 { background-color: #FFEEAD; }
 
+        /* Set-specific number styles */
+        .set-1 .lotto-number {
+            background-color: #FF6B6B;
+            color: white;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            font-size: 16px;
+        }
+
+        .set-2 .lotto-number {
+            background-color: #4ECDC4;
+            color: white;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            font-size: 16px;
+        }
+
+        .set-3 .lotto-number {
+            background-color: #45B7D1;
+            color: white;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            font-size: 16px;
+        }
+
+        .set-4 .lotto-number {
+            background-color: #96CEB4;
+            color: white;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            font-size: 16px;
+        }
+
+        .set-5 .lotto-number {
+            background-color: #FFEEAD;
+            color: #333;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            font-size: 16px;
+        }
+
+        /* Responsive styles for number circles */
+        @media (max-width: 768px) {
+            .set-1 .lotto-number,
+            .set-2 .lotto-number,
+            .set-3 .lotto-number,
+            .set-4 .lotto-number,
+            .set-5 .lotto-number {
+                width: 35px;
+                height: 35px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .set-1 .lotto-number,
+            .set-2 .lotto-number,
+            .set-3 .lotto-number,
+            .set-4 .lotto-number,
+            .set-5 .lotto-number {
+                width: 30px;
+                height: 30px;
+                font-size: 12px;
+            }
+        }
+
+        /* Number container styles */
+        .numbers-container td {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .numbers-container .lotto-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 2px;
+        }
+
+        /* Set label styles */
+        .set-label {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
     </style>
 </head>
 <body>
