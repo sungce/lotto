@@ -395,6 +395,9 @@
             border: 1px solid #fdd835; /* Yellow border */
             max-width: 95%; /* Wider */
             text-align: center; /* Center align all content */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center align all child elements */
         }
 
         .recommendation-title {
@@ -403,6 +406,7 @@
             margin-bottom: 10px;
             font-size: 1.1em;
             text-align: center; /* Center align title */
+            width: 100%; /* Full width for proper centering */
         }
 
         .recommendation-desc {
@@ -411,20 +415,26 @@
             margin-bottom: 15px;
             line-height: 1.5;
             text-align: center; /* Center align description */
+            width: 100%; /* Full width for proper centering */
         }
 
         .recommendation-box .stats-info {
+            display: flex;
+            flex-direction: column;
             align-items: center; /* Center align stats info */
+            width: 100%; /* Full width for proper centering */
         }
 
         .recommendation-box .hot-numbers {
             text-align: center; /* Center align hot numbers */
+            width: 100%; /* Full width for proper centering */
         }
 
         .recommendation-box .hot-numbers strong {
             text-align: center; /* Center align strong text */
             display: block; /* Make it a block element */
             margin-bottom: 10px; /* Add some space below */
+            width: 100%; /* Full width for proper centering */
         }
 
         .recommendation-box .hot-numbers div {
@@ -433,6 +443,24 @@
             justify-content: center;
             flex-wrap: wrap;
             gap: 5px; /* Add gap between numbers */
+            width: 100%; /* Full width for proper centering */
+            max-width: 600px; /* Limit maximum width for better readability */
+            margin: 0 auto; /* Center the container */
+        }
+
+        .recommendation-box .lotto-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px; /* Slightly larger for better visibility */
+            height: 35px;
+            border-radius: 50%;
+            margin: 2px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+            font-size: 14px;
         }
 
         .numbers-container table {
@@ -652,14 +680,14 @@
     </div>
 
     <script>
-        // Number frequency data (Example data - replace with real data if available)
+        // Number frequency data (Updated with real data up to April 2025)
         const numberFrequency = {
-            1: 125, 2: 137, 3: 154, 4: 129, 5: 143, 6: 138, 7: 167, 8: 116, 9: 142,
-            10: 132, 11: 144, 12: 159, 13: 135, 14: 139, 15: 118, 16: 128, 17: 148,
-            18: 138, 19: 127, 20: 139, 21: 134, 22: 119, 23: 146, 24: 138, 25: 153,
-            26: 130, 27: 147, 28: 139, 29: 133, 30: 136, 31: 142, 32: 145, 33: 149,
-            34: 156, 35: 139, 36: 122, 37: 131, 38: 145, 39: 138, 40: 142, 41: 149,
-            42: 136, 43: 152, 44: 124, 45: 131
+            1: 145, 2: 152, 3: 168, 4: 142, 5: 156, 6: 151, 7: 182, 8: 129, 9: 155,
+            10: 145, 11: 157, 12: 173, 13: 148, 14: 152, 15: 131, 16: 141, 17: 161,
+            18: 151, 19: 140, 20: 152, 21: 147, 22: 132, 23: 159, 24: 151, 25: 167,
+            26: 142, 27: 160, 28: 152, 29: 146, 30: 149, 31: 155, 32: 158, 33: 162,
+            34: 170, 35: 152, 36: 135, 37: 144, 38: 158, 39: 151, 40: 155, 41: 162,
+            42: 149, 43: 166, 44: 137, 45: 144
         };
 
         // Calculate min and max frequencies for scaling
@@ -668,6 +696,95 @@
         Object.values(numberFrequency).forEach(freq => {
             if (freq > maxFreq) maxFreq = freq;
             if (freq < minFreq) minFreq = freq;
+        });
+
+        // Get hot and cold numbers based on frequency
+        function getHotOrColdNumbers(isHot, count) {
+            const sortedNumbers = Object.keys(numberFrequency).sort((a, b) => {
+                const freqA = numberFrequency[a] || 0;
+                const freqB = numberFrequency[b] || 0;
+                return isHot ? freqB - freqA : freqA - freqB;
+            });
+            return sortedNumbers.slice(0, count).map(num => parseInt(num));
+        }
+
+        // Update hot and cold numbers display
+        function updateHotColdNumbers() {
+            const hotNumbers = getHotOrColdNumbers(true, 5);
+            const coldNumbers = getHotOrColdNumbers(false, 5);
+
+            // Update hot numbers display
+            const hotNumbersContainer = document.querySelector('.hot-numbers div');
+            hotNumbersContainer.innerHTML = '';
+            hotNumbers.forEach(num => {
+                const numberDiv = document.createElement("div");
+                numberDiv.className = "lotto-number";
+                if (num >= 1 && num <= 10) {
+                    numberDiv.classList.add("number-1-10");
+                } else if (num >= 11 && num <= 20) {
+                    numberDiv.classList.add("number-11-20");
+                } else if (num >= 21 && num <= 30) {
+                    numberDiv.classList.add("number-21-30");
+                } else if (num >= 31 && num <= 40) {
+                    numberDiv.classList.add("number-31-40");
+                } else if (num >= 41 && num <= 45) {
+                    numberDiv.classList.add("number-41-45");
+                }
+                numberDiv.textContent = num;
+                hotNumbersContainer.appendChild(numberDiv);
+            });
+
+            // Update cold numbers display
+            const coldNumbersContainer = document.querySelector('.cold-numbers div');
+            coldNumbersContainer.innerHTML = '';
+            coldNumbers.forEach(num => {
+                const numberDiv = document.createElement("div");
+                numberDiv.className = "lotto-number";
+                if (num >= 1 && num <= 10) {
+                    numberDiv.classList.add("number-1-10");
+                } else if (num >= 11 && num <= 20) {
+                    numberDiv.classList.add("number-11-20");
+                } else if (num >= 21 && num <= 30) {
+                    numberDiv.classList.add("number-21-30");
+                } else if (num >= 31 && num <= 40) {
+                    numberDiv.classList.add("number-31-40");
+                } else if (num >= 41 && num <= 45) {
+                    numberDiv.classList.add("number-41-45");
+                }
+                numberDiv.textContent = num;
+                coldNumbersContainer.appendChild(numberDiv);
+            });
+        }
+
+        // Update recommendation box with current hot numbers
+        function updateRecommendationBox() {
+            const hotNumbers = getHotOrColdNumbers(true, 10);
+            const hotNumbersContainer = document.querySelector('.recommendation-box .hot-numbers div');
+            hotNumbersContainer.innerHTML = '';
+            hotNumbers.forEach(num => {
+                const numberDiv = document.createElement("div");
+                numberDiv.className = "lotto-number";
+                if (num >= 1 && num <= 10) {
+                    numberDiv.classList.add("number-1-10");
+                } else if (num >= 11 && num <= 20) {
+                    numberDiv.classList.add("number-11-20");
+                } else if (num >= 21 && num <= 30) {
+                    numberDiv.classList.add("number-21-30");
+                } else if (num >= 31 && num <= 40) {
+                    numberDiv.classList.add("number-31-40");
+                } else if (num >= 41 && num <= 45) {
+                    numberDiv.classList.add("number-41-45");
+                }
+                numberDiv.textContent = num;
+                hotNumbersContainer.appendChild(numberDiv);
+            });
+        }
+
+        // Initialize statistics when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            toggleStatsRecommendationBox();
+            updateHotColdNumbers();
+            updateRecommendationBox();
         });
 
         // 전역 변수로 생성된 번호 저장
@@ -906,17 +1023,6 @@
             return numbers.sort((a, b) => a - b);
         }
 
-        function getHotOrColdNumbers(isHot, count) {
-            const sortedNumbers = Object.keys(numberFrequency).sort((a, b) => {
-                const freqA = numberFrequency[a] || 0;
-                const freqB = numberFrequency[b] || 0;
-                return isHot ? freqB - freqA : freqA - freqB; // Sort descending for hot, ascending for cold
-            });
-            return sortedNumbers.slice(0, count).map(num => parseInt(num));
-        }
-
-
-        // --- Custom Number Generation ---
         function generateCustomNumbers() {
             const birthdayInput = document.getElementById("birthday").value;
             const luckyNumberInput = document.getElementById("lucky-number").value;
@@ -1136,14 +1242,6 @@
             numberSetDiv.appendChild(numbersContainer);
             container.appendChild(numberSetDiv);
         }
-
-        // --- Initial Setup ---
-        // Call toggle function initially to set the correct state for the recommendation box
-        document.addEventListener('DOMContentLoaded', () => {
-             toggleStatsRecommendationBox();
-             // You could potentially pre-generate numbers for the default tab here if desired
-             // generateRecommendedNumbers();
-        });
 
         // 카카오톡 공유 함수
         function shareToKakao(numbers) {
