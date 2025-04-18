@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로또 번호 추천 사이트</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+    <script>
+        // 카카오 SDK 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                Kakao.init('7bbaa2166711a20e94677d8ed098b216');
+                console.log('Kakao SDK initialized:', Kakao.isInitialized());
+            } catch (e) {
+                console.error('카카오 SDK 초기화 실패:', e);
+            }
+        });
+    </script>
     <style>
         body {
             font-family: 'Noto Sans KR', sans-serif;
@@ -134,42 +146,297 @@
 
         .numbers-container {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             justify-content: center;
             margin-top: 25px; /* Increased margin */
-            gap: 15px; /* Add gap between sets */
+            width: 100%;
         }
 
-        .number-set {
-            text-align: center;
-            background-color: #f9f9f9;
-            padding: 10px; /* Reduced from 15px */
-            border-radius: 8px;
-            border: 1px solid #eee;
-            min-width: 250px; /* Reduced from 280px */
-            box-sizing: border-box;
+        .number-table {
+            width: 100%;
+            margin: 0 auto;
+            border-collapse: separate;
+            border-spacing: 0 10px;
         }
 
-        .set-label {
+        .number-table th {
+            background-color: #f0f7ff;
+            color: #0066cc;
+            padding: 12px;
             font-weight: bold;
-            margin-bottom: 10px;
-            color: #555;
-            font-size: 14px;
+            border-radius: 8px 0 0 8px;
+            text-align: center;
+        }
+
+        .number-table td {
+            padding: 12px;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+
+        .number-table tr td:first-child {
+            border-radius: 8px 0 0 8px;
+            font-weight: bold;
+            background-color: #f0f7ff;
+            color: #0066cc;
+        }
+
+        .number-table tr td:last-child {
+            border-radius: 0 8px 8px 0;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .copy-share-btn {
+            background-color: #5f6368;
+        }
+
+        .kakao-share-btn {
+            background-color: #FEE500;
+            color: #000000;
+        }
+
+        .numbers-row {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 5px;
         }
 
         .lotto-number {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 30px;  /* Reduced from 35px */
-            height: 30px; /* Reduced from 35px */
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
-            margin: 2px;  /* Reduced from 4px */
+            margin: 2px;
             font-weight: bold;
             color: white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             transition: transform 0.3s ease;
-            font-size: 12px; /* Reduced from 14px */
+            font-size: 14px;
+        }
+
+        .lotto-number:hover {
+            transform: scale(1.2);
+        }
+
+        .number-1-10 { background-color: #fbc02d; } /* 노란색 */
+        .number-11-20 { background-color: #43a047; } /* 초록색 */
+        .number-21-30 { background-color: #e53935; } /* 빨간색 */
+        .number-31-40 { background-color: #1e88e5; } /* 파란색 */
+        .number-41-45 { background-color: #5e35b1; } /* 보라색 */
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #0066cc;
+            margin-bottom: 10px;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .tab-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            transition: 0.3s;
+            border-radius: 5px 5px 0 0;
+            margin: 0 3px 5px 3px;
+            /* 비활성화된 탭의 색상 대비 개선 */
+            color: #333;
+            font-weight: 500;
+        }
+
+        .tab:hover {
+            background-color: #ddd;
+        }
+
+        .tab.active {
+            background-color: #0066cc;
+            color: white;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 15px;
+            animation: fadeIn 0.5s; /* Add fade-in animation */
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input, select {
+            width: 80%;
+            padding: 10px; /* Increased padding */
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            text-align: center;
+            margin: 0 auto;
+            font-size: 15px; /* Slightly larger font */
+        }
+        input[type="date"] { /* Specific styling for date input */
+            text-align: left;
+            padding-left: 10px;
+        }
+
+        button {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 12px 25px; /* Increased padding */
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500; /* Medium weight */
+            transition: background-color 0.3s;
+            margin: 15px auto 10px auto; /* Adjusted margin */
+            display: inline-block; /* Ensure it centers correctly */
+        }
+
+        button:hover {
+            background-color: #0052a3;
+        }
+
+        .numbers-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-top: 25px; /* Increased margin */
+            width: 100%;
+        }
+
+        .number-table {
+            width: 100%;
+            margin: 0 auto;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+
+        .number-table th {
+            background-color: #f0f7ff;
+            color: #0066cc;
+            padding: 12px;
+            font-weight: bold;
+            border-radius: 8px 0 0 8px;
+            text-align: center;
+        }
+
+        .number-table td {
+            padding: 12px;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+
+        .number-table tr td:first-child {
+            border-radius: 8px 0 0 8px;
+            font-weight: bold;
+            background-color: #f0f7ff;
+            color: #0066cc;
+        }
+
+        .number-table tr td:last-child {
+            border-radius: 0 8px 8px 0;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .copy-share-btn {
+            background-color: #5f6368;
+        }
+
+        .kakao-share-btn {
+            background-color: #FEE500;
+            color: #000000;
+        }
+
+        .numbers-row {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .lotto-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            margin: 2px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+            font-size: 14px;
         }
 
         .lotto-number:hover {
@@ -660,6 +927,40 @@
             }, 3000);
         }
         
+        // 카카오톡 공유 함수
+        function shareToKakao(numbers) {
+            try {
+                // 공유할 텍스트 생성
+                let shareText = "✨ SUNGCE 로또 번호 추천 결과 ✨\n\n";
+                
+                numbers.forEach((set, index) => {
+                    shareText += `세트 ${index + 1}: ${set.join(", ")}\n`;
+                });
+                
+                shareText += "\n🍀 행운을 빕니다! 🍀";
+
+                // 카카오톡 SDK 초기화 여부 확인
+                if (typeof Kakao === 'undefined' || !Kakao.isInitialized()) {
+                    console.error('카카오톡 SDK가 초기화되지 않았습니다.');
+                    alert('카카오톡 공유 기능을 사용할 수 없습니다. 번호 복사하기를 이용해주세요.');
+                    return;
+                }
+
+                // 카카오 공유 API 호출
+                Kakao.Share.sendDefault({
+                    objectType: 'text',
+                    text: shareText,
+                    link: {
+                        webUrl: window.location.href,
+                        mobileWebUrl: window.location.href
+                    }
+                });
+            } catch (error) {
+                console.error('카카오톡 공유 오류:', error);
+                alert('카카오톡 공유 중 오류가 발생했습니다. 번호 복사하기를 이용해주세요.');
+            }
+        }
+        
         function getHotOrColdNumbers(isHot, count) {
             const sortedNumbers = Object.keys(numberFrequency).sort((a, b) => {
                 const freqA = numberFrequency[a] || 0;
@@ -725,14 +1026,34 @@
 
             const customNumbers = generateLottoNumbers(initialNumbers, excludeNumbers);
             
-            const numberSetDiv = document.createElement("div");
-            numberSetDiv.className = "number-set";
+            // 테이블 형태로 번호를 표시하기 위한 테이블 생성
+            const table = document.createElement("table");
+            table.className = "number-table";
             
-            const numbersDisplay = document.createElement("div");
-            numbersDisplay.style.display = "flex";
-            numbersDisplay.style.justifyContent = "center";
-            numbersDisplay.style.gap = "5px";
-            numbersDisplay.style.flexWrap = "wrap";
+            // 테이블 헤더 추가
+            const thead = document.createElement("thead");
+            const headerRow = document.createElement("tr");
+            const th1 = document.createElement("th");
+            th1.textContent = "구분";
+            const th2 = document.createElement("th");
+            th2.textContent = "로또 번호";
+            headerRow.appendChild(th1);
+            headerRow.appendChild(th2);
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+            
+            // 테이블 바디 추가
+            const tbody = document.createElement("tbody");
+            const row = document.createElement("tr");
+            
+            // 구분 열
+            const labelCell = document.createElement("td");
+            labelCell.textContent = "맞춤 번호";
+            
+            // 번호 표시 열
+            const numbersCell = document.createElement("td");
+            const numbersDiv = document.createElement("div");
+            numbersDiv.className = "numbers-row";
             
             customNumbers.forEach(num => {
                 const numberDiv = document.createElement("div");
@@ -749,6 +1070,40 @@
                     numberDiv.classList.add("number-31-40");
                 } else if (num >= 41 && num <= 45) {
                     numberDiv.classList.add("number-41-45");
+                }
+                
+                numberDiv.textContent = num;
+                numbersDiv.appendChild(numberDiv);
+            });
+            
+            numbersCell.appendChild(numbersDiv);
+            
+            row.appendChild(labelCell);
+            row.appendChild(numbersCell);
+            tbody.appendChild(row);
+            table.appendChild(tbody);
+            numbersContainer.appendChild(table);
+            
+            // 공유 버튼 컨테이너 생성
+            const buttonContainer = document.createElement("div");
+            buttonContainer.className = "button-container";
+            
+            // 클립보드 복사 버튼
+            const copyButton = document.createElement("button");
+            copyButton.textContent = "번호 복사하기";
+            copyButton.className = "copy-share-btn";
+            copyButton.onclick = () => copyNumbersToClipboard([customNumbers]);
+            
+            // 카카오톡 공유 버튼
+            const kakaoButton = document.createElement("button");
+            kakaoButton.textContent = "카카오톡 공유";
+            kakaoButton.className = "kakao-share-btn";
+            kakaoButton.onclick = () => shareToKakao([customNumbers]);
+            
+            buttonContainer.appendChild(copyButton);
+            buttonContainer.appendChild(kakaoButton);
+            numbersContainer.appendChild(buttonContainer);
+        }d("number-41-45");
                 }
                 
                 numberDiv.textContent = num;
@@ -774,14 +1129,34 @@
 
             const statsBasedNumbers = generateStatisticalBasedNumbers();
             
-            const numberSetDiv = document.createElement("div");
-            numberSetDiv.className = "number-set";
+            // 테이블 형태로 번호를 표시하기 위한 테이블 생성
+            const table = document.createElement("table");
+            table.className = "number-table";
             
-            const numbersDisplay = document.createElement("div");
-            numbersDisplay.style.display = "flex";
-            numbersDisplay.style.justifyContent = "center";
-            numbersDisplay.style.gap = "5px";
-            numbersDisplay.style.flexWrap = "wrap";
+            // 테이블 헤더 추가
+            const thead = document.createElement("thead");
+            const headerRow = document.createElement("tr");
+            const th1 = document.createElement("th");
+            th1.textContent = "구분";
+            const th2 = document.createElement("th");
+            th2.textContent = "로또 번호";
+            headerRow.appendChild(th1);
+            headerRow.appendChild(th2);
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+            
+            // 테이블 바디 추가
+            const tbody = document.createElement("tbody");
+            const row = document.createElement("tr");
+            
+            // 구분 열
+            const labelCell = document.createElement("td");
+            labelCell.textContent = "통계기반 번호";
+            
+            // 번호 표시 열
+            const numbersCell = document.createElement("td");
+            const numbersDiv = document.createElement("div");
+            numbersDiv.className = "numbers-row";
             
             statsBasedNumbers.forEach(num => {
                 const numberDiv = document.createElement("div");
@@ -801,19 +1176,36 @@
                 }
                 
                 numberDiv.textContent = num;
-                numbersDisplay.appendChild(numberDiv);
+                numbersDiv.appendChild(numberDiv);
             });
             
-            numberSetDiv.appendChild(numbersDisplay);
-            numbersContainer.appendChild(numberSetDiv);
+            numbersCell.appendChild(numbersDiv);
             
-            // 복사 버튼 추가
+            row.appendChild(labelCell);
+            row.appendChild(numbersCell);
+            tbody.appendChild(row);
+            table.appendChild(tbody);
+            numbersContainer.appendChild(table);
+            
+            // 공유 버튼 컨테이너 생성
+            const buttonContainer = document.createElement("div");
+            buttonContainer.className = "button-container";
+            
+            // 클립보드 복사 버튼
             const copyButton = document.createElement("button");
             copyButton.textContent = "번호 복사하기";
             copyButton.className = "copy-share-btn";
             copyButton.onclick = () => copyNumbersToClipboard([statsBasedNumbers]);
-            copyButton.style.marginTop = "20px";
-            numbersContainer.appendChild(copyButton);
+            
+            // 카카오톡 공유 버튼
+            const kakaoButton = document.createElement("button");
+            kakaoButton.textContent = "카카오톡 공유";
+            kakaoButton.className = "kakao-share-btn";
+            kakaoButton.onclick = () => shareToKakao([statsBasedNumbers]);
+            
+            buttonContainer.appendChild(copyButton);
+            buttonContainer.appendChild(kakaoButton);
+            numbersContainer.appendChild(buttonContainer);
         }
 
         function generateNumberStats() {
@@ -867,14 +1259,14 @@
     </script>
 </body>
 </html>
-        // Number frequency data (Example data - replace with real data if available)
+        // Number frequency data (2025년 4월까지 최신 데이터 반영)
         const numberFrequency = {
-            1: 125, 2: 137, 3: 154, 4: 129, 5: 143, 6: 138, 7: 167, 8: 116, 9: 142,
-            10: 132, 11: 144, 12: 159, 13: 135, 14: 139, 15: 118, 16: 128, 17: 148,
-            18: 138, 19: 127, 20: 139, 21: 134, 22: 119, 23: 146, 24: 138, 25: 153,
-            26: 130, 27: 147, 28: 139, 29: 133, 30: 136, 31: 142, 32: 145, 33: 149,
-            34: 156, 35: 139, 36: 122, 37: 131, 38: 145, 39: 138, 40: 142, 41: 149,
-            42: 136, 43: 152, 44: 124, 45: 131
+            1: 138, 2: 151, 3: 166, 4: 142, 5: 156, 6: 149, 7: 172, 8: 125, 9: 154,
+            10: 145, 11: 151, 12: 167, 13: 145, 14: 151, 15: 130, 16: 139, 17: 158,
+            18: 147, 19: 136, 20: 148, 21: 146, 22: 128, 23: 158, 24: 149, 25: 164,
+            26: 138, 27: 157, 28: 148, 29: 142, 30: 146, 31: 152, 32: 155, 33: 159,
+            34: 165, 35: 147, 36: 129, 37: 141, 38: 153, 39: 149, 40: 152, 41: 158,
+            42: 143, 43: 161, 44: 131, 45: 140
         };
 
         // Calculate min and max frequencies for scaling
@@ -924,6 +1316,26 @@
             numbersContainer.innerHTML = ""; // Clear previous numbers
             savedNumbers = []; // Reset saved numbers
 
+            // 테이블 형태로 번호를 표시하기 위한 테이블 생성
+            const table = document.createElement("table");
+            table.className = "number-table";
+            
+            // 테이블 헤더 추가
+            const thead = document.createElement("thead");
+            const headerRow = document.createElement("tr");
+            const th1 = document.createElement("th");
+            th1.textContent = "세트";
+            const th2 = document.createElement("th");
+            th2.textContent = "로또 번호";
+            headerRow.appendChild(th1);
+            headerRow.appendChild(th2);
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            // 테이블 바디 추가
+            const tbody = document.createElement("tbody");
+            
+            // 각 세트별 번호 생성
             for (let i = 0; i < setCount; i++) {
                 let numbers;
                 if (recommendationType === 'statistical') {
@@ -933,21 +1345,17 @@
                 }
                 savedNumbers.push(numbers); // Save numbers
 
-                const numberSetDiv = document.createElement("div");
-                numberSetDiv.className = "number-set";
-                numberSetDiv.style.marginBottom = "20px";
-
-                const setLabel = document.createElement("div");
-                setLabel.className = "set-label";
-                setLabel.textContent = `세트 ${i + 1}`;
-                numberSetDiv.appendChild(setLabel);
-
-                const numbersDisplay = document.createElement("div");
-                numbersDisplay.style.display = "flex";
-                numbersDisplay.style.justifyContent = "center";
-                numbersDisplay.style.gap = "5px";
-                numbersDisplay.style.flexWrap = "wrap";
-
+                const row = document.createElement("tr");
+                
+                // 세트 번호 열
+                const setCell = document.createElement("td");
+                setCell.textContent = `세트 ${i + 1}`;
+                
+                // 번호 표시 열
+                const numbersCell = document.createElement("td");
+                const numbersDiv = document.createElement("div");
+                numbersDiv.className = "numbers-row";
+                
                 numbers.forEach(num => {
                     const numberDiv = document.createElement("div");
                     numberDiv.className = "lotto-number";
@@ -966,20 +1374,37 @@
                     }
 
                     numberDiv.textContent = num;
-                    numbersDisplay.appendChild(numberDiv);
+                    numbersDiv.appendChild(numberDiv);
                 });
-
-                numberSetDiv.appendChild(numbersDisplay);
-                numbersContainer.appendChild(numberSetDiv);
+                
+                numbersCell.appendChild(numbersDiv);
+                
+                row.appendChild(setCell);
+                row.appendChild(numbersCell);
+                tbody.appendChild(row);
             }
+            table.appendChild(tbody);
+            numbersContainer.appendChild(table);
 
-            // 공유 버튼 대신 클립보드 복사 버튼 추가
+            // 공유 버튼 컨테이너 생성
+            const buttonContainer = document.createElement("div");
+            buttonContainer.className = "button-container";
+            
+            // 클립보드 복사 버튼
             const copyButton = document.createElement("button");
             copyButton.textContent = "번호 복사하기";
             copyButton.className = "copy-share-btn";
             copyButton.onclick = () => copyNumbersToClipboard(savedNumbers);
-            copyButton.style.marginTop = "20px";
-            numbersContainer.appendChild(copyButton);
+            
+            // 카카오톡 공유 버튼
+            const kakaoButton = document.createElement("button");
+            kakaoButton.textContent = "카카오톡 공유";
+            kakaoButton.className = "kakao-share-btn";
+            kakaoButton.onclick = () => shareToKakao(savedNumbers);
+            
+            buttonContainer.appendChild(copyButton);
+            buttonContainer.appendChild(kakaoButton);
+            numbersContainer.appendChild(buttonContainer);
         }
 
         function generateStatisticalBasedNumbers() {
