@@ -455,19 +455,19 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 35px;
-            height: 35px;
+            width: 30px; /* Reduced from 35px */
+            height: 30px;
             border-radius: 50%;
             margin: 2px;
             font-weight: bold;
             color: white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             transition: transform 0.3s ease;
-            font-size: 14px;
+            font-size: 12px; /* Reduced from 14px */
             aspect-ratio: 1;
-            min-width: 35px; /* Fixed minimum size */
-            min-height: 35px;
-            flex-shrink: 0; /* Prevent shrinking */
+            min-width: 30px;
+            min-height: 30px;
+            flex-shrink: 0;
         }
 
         .numbers-container table {
@@ -521,17 +521,17 @@
         /* Override responsive styles for recommendation box */
         @media (max-width: 768px) {
             .recommendation-box .lotto-number {
-                width: 35px;
-                height: 35px;
-                font-size: 14px;
+                width: 28px;
+                height: 28px;
+                font-size: 11px;
             }
         }
 
         @media (max-width: 480px) {
             .recommendation-box .lotto-number {
-                width: 35px;
-                height: 35px;
-                font-size: 14px;
+                width: 25px;
+                height: 25px;
+                font-size: 10px;
             }
         }
 
@@ -711,6 +711,43 @@
             font-size: 16px;
         }
 
+        /* Cold numbers container styles */
+        .cold-numbers {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .cold-numbers div {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 5px;
+            max-width: 300px; /* Limit width to show only 5 numbers */
+            margin: 0 auto;
+        }
+
+        .cold-numbers .lotto-number {
+            width: 35px;
+            height: 35px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .cold-numbers .lotto-number {
+                width: 30px;
+                height: 30px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cold-numbers .lotto-number {
+                width: 25px;
+                height: 25px;
+                font-size: 10px;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -799,6 +836,16 @@
                 <input type="text" id="exclude-numbers" placeholder="예: 13, 26, 33">
             </div>
 
+            <div class="form-group">
+                <label for="custom-sets">생성할 번호 세트 수:</label>
+                <select id="custom-sets">
+                    <option value="1">1세트</option>
+                    <option value="3">3세트</option>
+                    <option value="5" selected>5세트</option>
+                    <option value="10">10세트</option>
+                </select>
+            </div>
+
             <button onclick="generateCustomNumbers()">✨ 맞춤 번호 생성하기</button>
 
             <div id="custom-numbers" class="numbers-container">
@@ -880,7 +927,7 @@
         // Update hot and cold numbers display
         function updateHotColdNumbers() {
             const hotNumbers = getHotOrColdNumbers(true, 5);
-            const coldNumbers = getHotOrColdNumbers(false, 5);
+            const coldNumbers = getHotOrColdNumbers(false, 5); // Limit to 5 numbers
 
             // Update hot numbers display
             const hotNumbersContainer = document.querySelector('.hot-numbers div');
@@ -1197,9 +1244,11 @@
             const birthdayInput = document.getElementById("birthday").value;
             const luckyNumberInput = document.getElementById("lucky-number").value;
             const excludeInput = document.getElementById("exclude-numbers").value;
+            const setCount = parseInt(document.getElementById("custom-sets").value);
             const numbersContainer = document.getElementById("custom-numbers");
 
             numbersContainer.innerHTML = ""; // Clear previous numbers
+            savedNumbers = []; // Reset saved numbers
 
             let initialNumbers = [];
             let excludeNumbers = [];
@@ -1246,8 +1295,72 @@
                 return;
             }
 
-            const customNumbers = generateLottoNumbers(initialNumbers, excludeNumbers);
-            displayNumbers(customNumbers, numbersContainer);
+            // Create table
+            const table = document.createElement("table");
+            const thead = document.createElement("thead");
+            const tbody = document.createElement("tbody");
+
+            // Create table header
+            const headerRow = document.createElement("tr");
+            const headerCell = document.createElement("th");
+            headerCell.colSpan = "2";
+            headerCell.textContent = "추천 번호 세트";
+            headerRow.appendChild(headerCell);
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            // Generate numbers for each set
+            for (let i = 0; i < setCount; i++) {
+                const customNumbers = generateLottoNumbers(initialNumbers, excludeNumbers);
+                savedNumbers.push(customNumbers);
+
+                const row = document.createElement("tr");
+                
+                // Set number cell
+                const setCell = document.createElement("td");
+                setCell.textContent = `세트 ${i + 1}`;
+                setCell.style.width = "20%";
+                row.appendChild(setCell);
+
+                // Numbers cell
+                const numbersCell = document.createElement("td");
+                numbersCell.style.textAlign = "center";
+                numbersCell.classList.add(`set-${i + 1}`); // Add set-specific class
+                
+                customNumbers.forEach(num => {
+                    const numberDiv = document.createElement("div");
+                    numberDiv.className = "lotto-number";
+
+                    // Add color class based on number range
+                    if (num >= 1 && num <= 10) {
+                        numberDiv.classList.add("number-1-10");
+                    } else if (num >= 11 && num <= 20) {
+                        numberDiv.classList.add("number-11-20");
+                    } else if (num >= 21 && num <= 30) {
+                        numberDiv.classList.add("number-21-30");
+                    } else if (num >= 31 && num <= 40) {
+                        numberDiv.classList.add("number-31-40");
+                    } else if (num >= 41 && num <= 45) {
+                        numberDiv.classList.add("number-41-45");
+                    }
+
+                    numberDiv.textContent = num;
+                    numbersCell.appendChild(numberDiv);
+                });
+
+                row.appendChild(numbersCell);
+                tbody.appendChild(row);
+            }
+
+            table.appendChild(tbody);
+            numbersContainer.appendChild(table);
+
+            // Add share button
+            const shareButton = document.createElement("button");
+            shareButton.textContent = "카카오톡 공유";
+            shareButton.onclick = () => shareToKakao(savedNumbers);
+            shareButton.style.marginTop = "20px";
+            numbersContainer.appendChild(shareButton);
         }
 
         // --- Statistics Tab Specific ---
