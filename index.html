@@ -779,7 +779,6 @@
             justify-content: center;
             flex-wrap: wrap;
             gap: 5px;
-            max-width: 300px;
             margin: 0 auto;
             padding: 0 20px;
         }
@@ -798,7 +797,7 @@
             font-weight: bold;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             transition: transform 0.3s ease;
-            background-color: #FF6B6B; /* Default color */
+            aspect-ratio: 1;
         }
 
         /* Override responsive styles for hot numbers */
@@ -812,23 +811,6 @@
 
         @media (max-width: 480px) {
             .hot-numbers .lotto-number {
-                width: 20px;
-                height: 20px;
-                font-size: 10px;
-            }
-        }
-
-        /* Override responsive styles for recommendation box */
-        @media (max-width: 768px) {
-            .recommendation-box .lotto-number {
-                width: 23px;
-                height: 23px;
-                font-size: 11px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .recommendation-box .lotto-number {
                 width: 20px;
                 height: 20px;
                 font-size: 10px;
@@ -880,8 +862,8 @@
                 </p>
                 <div class="stats-info">
                     <div class="hot-numbers">
-                        <strong>자주 나오는 번호 (Top 10):</strong>
-                        <div> <!-- Wrap numbers for better alignment -->
+                        <strong>자주 나오는 번호 Top 10</strong>
+                        <div>
                             <div class="lotto-number number-1-10">3</div>
                             <div class="lotto-number number-1-10">7</div>
                             <div class="lotto-number number-11-20">12</div>
