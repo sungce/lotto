@@ -441,21 +441,21 @@
         }
 
         .recommendation-box .hot-numbers div {
-            text-align: center; /* Center align numbers container */
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 5px; /* Add gap between numbers */
-            width: 100%; /* Full width for proper centering */
-            max-width: 600px; /* Limit maximum width for better readability */
-            margin: 0 auto; /* Center the container */
+            gap: 5px;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 10px; /* Add padding to prevent edge numbers from touching */
         }
 
         .recommendation-box .lotto-number {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 35px; /* Slightly larger for better visibility */
+            width: 35px;
             height: 35px;
             border-radius: 50%;
             margin: 2px;
@@ -464,6 +464,10 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             transition: transform 0.3s ease;
             font-size: 14px;
+            aspect-ratio: 1;
+            min-width: 35px; /* Fixed minimum size */
+            min-height: 35px;
+            flex-shrink: 0; /* Prevent shrinking */
         }
 
         .numbers-container table {
@@ -514,28 +518,37 @@
             transform: scale(1.1);
         }
 
-        /* Responsive font size */
+        /* Override responsive styles for recommendation box */
         @media (max-width: 768px) {
-            .lotto-number {
-                width: 30px;
-                height: 30px;
-                font-size: 12px;
+            .recommendation-box .lotto-number {
+                width: 35px;
+                height: 35px;
+                font-size: 14px;
             }
         }
 
         @media (max-width: 480px) {
-            .lotto-number {
-                width: 25px;
-                height: 25px;
-                font-size: 10px;
+            .recommendation-box .lotto-number {
+                width: 35px;
+                height: 35px;
+                font-size: 14px;
             }
         }
 
-        /* Ensure perfect circle on mobile */
-        .lotto-number::before {
-            content: '';
-            padding-top: 100%;
-            display: block;
+        /* Ensure recommendation box numbers container doesn't wrap too early */
+        .recommendation-box .hot-numbers div {
+            padding: 0 5px;
+        }
+
+        /* Adjust recommendation box width for better mobile display */
+        @media (max-width: 480px) {
+            .recommendation-box {
+                padding: 15px 10px;
+            }
+            
+            .recommendation-box .hot-numbers div {
+                padding: 0 5px;
+            }
         }
 
         /* Number color groups for different sets */
