@@ -167,15 +167,18 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 30px;  /* Reduced from 35px */
-            height: 30px; /* Reduced from 35px */
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
-            margin: 2px;  /* Reduced from 4px */
+            margin: 2px;
             font-weight: bold;
             color: white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             transition: transform 0.3s ease;
-            font-size: 12px; /* Reduced from 14px */
+            font-size: 14px;
+            aspect-ratio: 1; /* Ensure perfect circle */
+            min-width: 30px; /* Minimum size for mobile */
+            min-height: 30px;
         }
 
         .lotto-number:hover {
@@ -511,36 +514,67 @@
             transform: scale(1.1);
         }
 
+        /* Responsive font size */
+        @media (max-width: 768px) {
+            .lotto-number {
+                width: 30px;
+                height: 30px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .lotto-number {
+                width: 25px;
+                height: 25px;
+                font-size: 10px;
+            }
+        }
+
+        /* Ensure perfect circle on mobile */
+        .lotto-number::before {
+            content: '';
+            padding-top: 100%;
+            display: block;
+        }
+
         /* Number color groups for different sets */
-        .set-1 .number-1-10 { background-color: #FF6B6B; } /* Coral Red */
-        .set-1 .number-11-20 { background-color: #4ECDC4; } /* Turquoise */
-        .set-1 .number-21-30 { background-color: #45B7D1; } /* Sky Blue */
-        .set-1 .number-31-40 { background-color: #96CEB4; } /* Sage Green */
-        .set-1 .number-41-45 { background-color: #FFEEAD; } /* Light Yellow */
+        .set-1 .number-1-10 { background-color: #FF6B6B; }
+        .set-1 .number-11-20 { background-color: #4ECDC4; }
+        .set-1 .number-21-30 { background-color: #45B7D1; }
+        .set-1 .number-31-40 { background-color: #96CEB4; }
+        .set-1 .number-41-45 { background-color: #FFEEAD; }
 
-        .set-2 .number-1-10 { background-color: #FF9A8B; } /* Salmon Pink */
-        .set-2 .number-11-20 { background-color: #6A0572; } /* Purple */
-        .set-2 .number-21-30 { background-color: #AB83A1; } /* Mauve */
-        .set-2 .number-31-40 { background-color: #D4A5A5; } /* Dusty Rose */
-        .set-2 .number-41-45 { background-color: #FFD3B6; } /* Peach */
+        .set-2 .number-1-10 { background-color: #FF9A8B; }
+        .set-2 .number-11-20 { background-color: #6A0572; }
+        .set-2 .number-21-30 { background-color: #AB83A1; }
+        .set-2 .number-31-40 { background-color: #D4A5A5; }
+        .set-2 .number-41-45 { background-color: #FFD3B6; }
 
-        .set-3 .number-1-10 { background-color: #A8E6CF; } /* Mint */
-        .set-3 .number-11-20 { background-color: #FFD3B6; } /* Peach */
-        .set-3 .number-21-30 { background-color: #FFAAA5; } /* Light Coral */
-        .set-3 .number-31-40 { background-color: #FF8B94; } /* Pink */
-        .set-3 .number-41-45 { background-color: #DCD6F7; } /* Lavender */
+        .set-3 .number-1-10 { background-color: #A8E6CF; }
+        .set-3 .number-11-20 { background-color: #FFD3B6; }
+        .set-3 .number-21-30 { background-color: #FFAAA5; }
+        .set-3 .number-31-40 { background-color: #FF8B94; }
+        .set-3 .number-41-45 { background-color: #DCD6F7; }
 
-        .set-4 .number-1-10 { background-color: #B5EAD7; } /* Soft Green */
-        .set-4 .number-11-20 { background-color: #C7CEEA; } /* Periwinkle */
-        .set-4 .number-21-30 { background-color: #E2F0CB; } /* Light Green */
-        .set-4 .number-31-40 { background-color: #FFB7B2; } /* Light Pink */
-        .set-4 .number-41-45 { background-color: #FFDAC1; } /* Light Orange */
+        .set-4 .number-1-10 { background-color: #B5EAD7; }
+        .set-4 .number-11-20 { background-color: #C7CEEA; }
+        .set-4 .number-21-30 { background-color: #E2F0CB; }
+        .set-4 .number-31-40 { background-color: #FFB7B2; }
+        .set-4 .number-41-45 { background-color: #FFDAC1; }
 
-        .set-5 .number-1-10 { background-color: #FF9AA2; } /* Pink */
-        .set-5 .number-11-20 { background-color: #FFB7B2; } /* Light Pink */
-        .set-5 .number-21-30 { background-color: #FFDAC1; } /* Light Orange */
-        .set-5 .number-31-40 { background-color: #E2F0CB; } /* Light Green */
-        .set-5 .number-41-45 { background-color: #B5EAD7; } /* Soft Green */
+        .set-5 .number-1-10 { background-color: #FF9AA2; }
+        .set-5 .number-11-20 { background-color: #FFB7B2; }
+        .set-5 .number-21-30 { background-color: #FFDAC1; }
+        .set-5 .number-31-40 { background-color: #E2F0CB; }
+        .set-5 .number-41-45 { background-color: #B5EAD7; }
+
+        /* Base number colors for immediate application */
+        .number-1-10 { background-color: #FF6B6B; }
+        .number-11-20 { background-color: #4ECDC4; }
+        .number-21-30 { background-color: #45B7D1; }
+        .number-31-40 { background-color: #96CEB4; }
+        .number-41-45 { background-color: #FFEEAD; }
 
     </style>
 </head>
@@ -941,6 +975,7 @@
                 // Numbers cell
                 const numbersCell = document.createElement("td");
                 numbersCell.style.textAlign = "center";
+                numbersCell.classList.add(`set-${i + 1}`); // Add set-specific class
                 
                 numbers.forEach(num => {
                     const numberDiv = document.createElement("div");
