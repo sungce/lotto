@@ -181,11 +181,6 @@
             flex-shrink: 0;
         }
 
-        /* Remove hover effect */
-        .lotto-number:hover {
-            transform: none;
-        }
-
         /* Hot and cold numbers styles */
         .hot-numbers, .cold-numbers {
             text-align: center;
@@ -217,21 +212,33 @@
             aspect-ratio: 1;
         }
 
-        /* Recommendation box number styles */
-        .recommendation-box .lotto-number {
-            width: 40px;
-            height: 40px;
-            font-size: 16px;
-            flex-shrink: 0;
-            margin: 2px;
-            display: inline-flex;
+        /* Stats grid number styles */
+        .stats-cell {
+            position: relative;
+            width: 100%;
+            padding-top: 100%;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 50%;
+            background-color: #f1f1f1;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+
+        .stats-cell-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            color: white;
-            font-weight: bold;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            aspect-ratio: 1;
         }
 
         /* Responsive styles for all number circles */
@@ -239,7 +246,7 @@
             .lotto-number,
             .hot-numbers .lotto-number,
             .cold-numbers .lotto-number,
-            .recommendation-box .lotto-number {
+            .stats-cell {
                 width: 35px;
                 height: 35px;
                 font-size: 14px;
@@ -250,7 +257,7 @@
             .lotto-number,
             .hot-numbers .lotto-number,
             .cold-numbers .lotto-number,
-            .recommendation-box .lotto-number {
+            .stats-cell {
                 width: 30px;
                 height: 30px;
                 font-size: 12px;
@@ -383,38 +390,6 @@
             border: 1px solid #eee;
             border-radius: 5px;
         }
-
-        .stats-cell {
-            position: relative;
-            width: 100%; /* Make cells fill grid space */
-            padding-top: 100%; /* Maintain square aspect ratio */
-            text-align: center;
-            font-size: 14px; /* Larger number */
-            font-weight: bold;
-            border-radius: 5px;
-            background-color: #f1f1f1;
-            box-sizing: border-box;
-            display: flex; /* Use flexbox for centering */
-            align-items: center;
-            justify-content: center;
-            color: #333;
-        }
-         .stats-cell-content { /* Inner div for content */
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-         }
-
-
-        /* Use distinct, accessible colors for stats */
-        .stats-cell-hot { background-color: #ffcdd2; } /* Light Red */
-        .stats-cell-warm { background-color: #fff9c4; } /* Light Yellow */
-        .stats-cell-cold { background-color: #bbdefb; } /* Light Blue */
 
         .frequency {
             position: absolute;
