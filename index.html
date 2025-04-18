@@ -394,7 +394,7 @@
             margin: 20px auto 15px auto; /* Adjusted margin */
             border: 1px solid #fdd835; /* Yellow border */
             max-width: 95%; /* Wider */
-            text-align: left; /* Align text left for readability */
+            text-align: center; /* Center align all content */
         }
 
         .recommendation-title {
@@ -402,6 +402,7 @@
             margin-top: 0;
             margin-bottom: 10px;
             font-size: 1.1em;
+            text-align: center; /* Center align title */
         }
 
         .recommendation-desc {
@@ -409,16 +410,30 @@
             color: #555;
             margin-bottom: 15px;
             line-height: 1.5;
+            text-align: center; /* Center align description */
         }
+
         .recommendation-box .stats-info {
-            align-items: flex-start; /* Align items left */
+            align-items: center; /* Center align stats info */
         }
-         .recommendation-box .hot-numbers strong {
-            text-align: left;
-         }
-         .recommendation-box .hot-numbers div {
-            text-align: left;
-         }
+
+        .recommendation-box .hot-numbers {
+            text-align: center; /* Center align hot numbers */
+        }
+
+        .recommendation-box .hot-numbers strong {
+            text-align: center; /* Center align strong text */
+            display: block; /* Make it a block element */
+            margin-bottom: 10px; /* Add some space below */
+        }
+
+        .recommendation-box .hot-numbers div {
+            text-align: center; /* Center align numbers container */
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 5px; /* Add gap between numbers */
+        }
 
         .numbers-container table {
             width: 100%;
@@ -467,6 +482,37 @@
         .numbers-container .lotto-number:hover {
             transform: scale(1.1);
         }
+
+        /* Number color groups for different sets */
+        .set-1 .number-1-10 { background-color: #FF6B6B; } /* Coral Red */
+        .set-1 .number-11-20 { background-color: #4ECDC4; } /* Turquoise */
+        .set-1 .number-21-30 { background-color: #45B7D1; } /* Sky Blue */
+        .set-1 .number-31-40 { background-color: #96CEB4; } /* Sage Green */
+        .set-1 .number-41-45 { background-color: #FFEEAD; } /* Light Yellow */
+
+        .set-2 .number-1-10 { background-color: #FF9A8B; } /* Salmon Pink */
+        .set-2 .number-11-20 { background-color: #6A0572; } /* Purple */
+        .set-2 .number-21-30 { background-color: #AB83A1; } /* Mauve */
+        .set-2 .number-31-40 { background-color: #D4A5A5; } /* Dusty Rose */
+        .set-2 .number-41-45 { background-color: #FFD3B6; } /* Peach */
+
+        .set-3 .number-1-10 { background-color: #A8E6CF; } /* Mint */
+        .set-3 .number-11-20 { background-color: #FFD3B6; } /* Peach */
+        .set-3 .number-21-30 { background-color: #FFAAA5; } /* Light Coral */
+        .set-3 .number-31-40 { background-color: #FF8B94; } /* Pink */
+        .set-3 .number-41-45 { background-color: #DCD6F7; } /* Lavender */
+
+        .set-4 .number-1-10 { background-color: #B5EAD7; } /* Soft Green */
+        .set-4 .number-11-20 { background-color: #C7CEEA; } /* Periwinkle */
+        .set-4 .number-21-30 { background-color: #E2F0CB; } /* Light Green */
+        .set-4 .number-31-40 { background-color: #FFB7B2; } /* Light Pink */
+        .set-4 .number-41-45 { background-color: #FFDAC1; } /* Light Orange */
+
+        .set-5 .number-1-10 { background-color: #FF9AA2; } /* Pink */
+        .set-5 .number-11-20 { background-color: #FFB7B2; } /* Light Pink */
+        .set-5 .number-21-30 { background-color: #FFDAC1; } /* Light Orange */
+        .set-5 .number-31-40 { background-color: #E2F0CB; } /* Light Green */
+        .set-5 .number-41-45 { background-color: #B5EAD7; } /* Soft Green */
 
     </style>
 </head>
@@ -690,6 +736,7 @@
                 // Numbers cell
                 const numbersCell = document.createElement("td");
                 numbersCell.style.textAlign = "center";
+                numbersCell.classList.add(`set-${index + 1}`); // Add set-specific class
                 
                 numbers.forEach(num => {
                     const numberDiv = document.createElement("div");
