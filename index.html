@@ -720,18 +720,28 @@
         .cold-numbers div {
             display: flex;
             justify-content: center;
-            flex-wrap: nowrap; /* Prevent wrapping */
+            flex-wrap: nowrap;
             gap: 5px;
-            max-width: 100%; /* Allow full width */
+            max-width: 300px; /* Limit width to show only 5 numbers */
             margin: 0 auto;
-            padding: 0 20px; /* Add padding for better spacing */
+            padding: 0 20px;
         }
 
         .cold-numbers .lotto-number {
             width: 35px;
             height: 35px;
             font-size: 14px;
-            flex-shrink: 0; /* Prevent shrinking */
+            flex-shrink: 0;
+            margin: 0 2px; /* Add small margin between numbers */
+        }
+
+        /* Ensure only 5 numbers are visible */
+        .cold-numbers div {
+            overflow: hidden;
+        }
+
+        .cold-numbers .lotto-number:nth-child(n+6) {
+            display: none;
         }
 
         @media (max-width: 768px) {
