@@ -236,7 +236,7 @@
 
         .hot-numbers, .cold-numbers {
             text-align: center;
-            width: 100%;
+            margin-bottom: 20px;
         }
         .hot-numbers strong, .cold-numbers strong {
             display: block;
@@ -778,15 +778,15 @@
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 5px;
+            gap: 10px;
             margin: 0 auto;
             padding: 0 20px;
         }
 
         .hot-numbers .lotto-number {
-            width: 25px;
-            height: 25px;
-            font-size: 12px;
+            width: 40px;
+            height: 40px;
+            font-size: 16px;
             flex-shrink: 0;
             margin: 2px;
             display: inline-flex;
@@ -803,17 +803,17 @@
         /* Override responsive styles for hot numbers */
         @media (max-width: 768px) {
             .hot-numbers .lotto-number {
-                width: 23px;
-                height: 23px;
-                font-size: 11px;
+                width: 35px;
+                height: 35px;
+                font-size: 14px;
             }
         }
 
         @media (max-width: 480px) {
             .hot-numbers .lotto-number {
-                width: 20px;
-                height: 20px;
-                font-size: 10px;
+                width: 30px;
+                height: 30px;
+                font-size: 12px;
             }
         }
 
@@ -938,23 +938,27 @@
             <div class="history">
                 <h3>🔥 자주 나오는 번호 TOP 5</h3>
                 <div class="hot-numbers">
-                    <div class="lotto-number number-1-10">7</div>
-                    <div class="lotto-number number-11-20">12</div>
-                    <div class="lotto-number number-21-30">25</div>
-                    <div class="lotto-number number-31-40">34</div>
-                    <div class="lotto-number number-41-45">43</div>
-                 </div>
+                    <div>
+                        <div class="lotto-number number-1-10">7</div>
+                        <div class="lotto-number number-11-20">12</div>
+                        <div class="lotto-number number-21-30">25</div>
+                        <div class="lotto-number number-31-40">34</div>
+                        <div class="lotto-number number-41-45">43</div>
+                    </div>
+                </div>
             </div>
 
             <div class="history">
                 <h3>❄️ 적게 나오는 번호 TOP 5</h3>
-                 <div class="cold-numbers">
-                    <div class="lotto-number number-11-20">15</div>
-                    <div class="lotto-number number-21-30">22</div>
-                    <div class="lotto-number number-31-40">36</div>
-                    <div class="lotto-number number-1-10">8</div>
-                    <div class="lotto-number number-41-45">44</div>
-                 </div>
+                <div class="cold-numbers">
+                    <div>
+                        <div class="lotto-number number-11-20">15</div>
+                        <div class="lotto-number number-21-30">22</div>
+                        <div class="lotto-number number-31-40">36</div>
+                        <div class="lotto-number number-1-10">8</div>
+                        <div class="lotto-number number-41-45">44</div>
+                    </div>
+                </div>
             </div>
 
             <button onclick="generateStatisticalNumbers()">📈 통계 기반 번호 1세트 추천받기</button>
